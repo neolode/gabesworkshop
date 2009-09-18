@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A216BBEA-F513-4DDA-8FCF-D7A5B4589D2E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SoftDB</RootNamespace>
+    <AssemblyName>SoftDB</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>ico.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bridge.cs" />
+    <Compile Include="frmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAbout.Designer.cs">
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmItem.Designer.cs">
+      <DependentUpon>frmItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmVaults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmVaults.Designer.cs">
+      <DependentUpon>frmVaults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JsonSerializer\Collections\ArrayBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\ArrayHandler.cs" />
+    <Compile Include="JsonSerializer\Collections\CollectionConstructorHandler.cs" />
+    <Compile Include="JsonSerializer\Collections\CollectionHandler.cs" />
+    <Compile Include="JsonSerializer\Collections\CollectionHandlerWrapper.cs" />
+    <Compile Include="JsonSerializer\Collections\GenericCollectionBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\GenericCollectionCtorBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\GenericCollectionHandler.cs" />
+    <Compile Include="JsonSerializer\Collections\GenericStackBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\GenericStackHandler.cs" />
+    <Compile Include="JsonSerializer\Collections\ICollectionBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\ListCollectionBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\ListHandler.cs" />
+    <Compile Include="JsonSerializer\Collections\StackBuilder.cs" />
+    <Compile Include="JsonSerializer\Collections\StackHandler.cs" />
+    <Compile Include="JsonSerializer\ConstructorParameterAttribute.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ArrayExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\BooleanExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\CastExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\Collections\CollectionObjectHandlerBase.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\Collections\QueueHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\DateTimeExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\DictionaryObjectExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ExpressionHandlerBase.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ExpressionHandlerCollection.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\IDeserializerHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\IExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ISerializerHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\NullExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\NumericExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ObjectExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ReferenceExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\TypeConverterExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionHandlers\ValueExpressionHandler.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\ArrayExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\CastExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\ComplexExpressionBase.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\CtorArgTypeResolver.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\Expression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\JsonPath.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\KeyValueExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\NullExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\ObjectExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\ReferenceExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\Expressions\ValueExpression.cs" />
+    <Compile Include="JsonSerializer\Framework\ExpressionWriter.cs" />
+    <Compile Include="JsonSerializer\Framework\IJsonWriter.cs" />
+    <Compile Include="JsonSerializer\Framework\JsonWriter.cs" />
+    <Compile Include="JsonSerializer\Framework\Parsing\AssignReferenceStage.cs" />
+    <Compile Include="JsonSerializer\Framework\Parsing\IParsingStage.cs" />
+    <Compile Include="JsonSerializer\Framework\Parsing\Parser.cs" />
+    <Compile Include="JsonSerializer\Framework\Parsing\Token.cs" />
+    <Compile Include="JsonSerializer\Framework\Parsing\TokenStream.cs" />
+    <Compile Include="JsonSerializer\Framework\ReferenceEqualityComparer.cs" />
+    <Compile Include="JsonSerializer\Framework\ReflectionUtils.cs" />
+    <Compile Include="JsonSerializer\Framework\SerializerHelper.cs" />
+    <Compile Include="JsonSerializer\Framework\TwoWayDictionary.cs" />
+    <Compile Include="JsonSerializer\Framework\Visitors\CollectReferencesVisitor.cs" />
+    <Compile Include="JsonSerializer\Framework\Visitors\IVisitable.cs" />
+    <Compile Include="JsonSerializer\Framework\Visitors\IVisitor.cs" />
+    <Compile Include="JsonSerializer\Framework\Visitors\ReferenceVisitor.cs" />
+    <Compile Include="JsonSerializer\Framework\Visitors\VisitorBase.cs" />
+    <Compile Include="JsonSerializer\IContextAware.cs" />
+    <Compile Include="JsonSerializer\IDeserializationCallback.cs" />
+    <Compile Include="JsonSerializer\ISerializationCallback.cs" />
+    <Compile Include="JsonSerializer\JsonConvertAttribute.cs" />
+    <Compile Include="JsonSerializer\JsonExCollectionAttribute.cs" />
+    <Compile Include="JsonSerializer\JsonExIgnoreAttribute.cs" />
+    <Compile Include="JsonSerializer\JsonExPropertyAttribute.cs" />
+    <Compile Include="JsonSerializer\JsonExSerializationException.cs" />
+    <Compile Include="JsonSerializer\MetaData\AbstractPropertyData.cs" />
+    <Compile Include="JsonSerializer\MetaData\CustomTypeDataRepository.cs" />
+    <Compile Include="JsonSerializer\MetaData\DynamicMethodUtil.cs" />
+    <Compile Include="JsonSerializer\MetaData\DynamicPropertyData.cs" />
+    <Compile Include="JsonSerializer\MetaData\DynamicTypeData.cs" />
+    <Compile Include="JsonSerializer\MetaData\FieldData.cs" />
+    <Compile Include="JsonSerializer\MetaData\IPropertyData.cs" />
+    <Compile Include="JsonSerializer\MetaData\MemberInfoPropertyDataBase.cs" />
+    <Compile Include="JsonSerializer\MetaData\MetaDataBase.cs" />
+    <Compile Include="JsonSerializer\MetaData\PropertyData.cs" />
+    <Compile Include="JsonSerializer\MetaData\TypeAliasCollection.cs" />
+    <Compile Include="JsonSerializer\MetaData\TypeData.cs" />
+    <Compile Include="JsonSerializer\MetaData\TypeDataRepository.cs" />
+    <Compile Include="JsonSerializer\ParseException.cs" />
+    <Compile Include="JsonSerializer\SerializationContext.cs" />
+    <Compile Include="JsonSerializer\Serializer.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\BitArrayConverter.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\ChainedConverter.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\ConverterUtil.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\DictionaryToListConverter.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\IJsonTypeConverter.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\JsonConverterBase.cs" />
+    <Compile Include="JsonSerializer\TypeConversion\TypeConverterAdapter.cs" />
+    <Compile Include="JsonSerializer\XmlConfigurator.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmAbout.resx">
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmItem.resx">
+      <DependentUpon>frmItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmVaults.resx">
+      <DependentUpon>frmVaults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RenderHtml\CssAnonymousBlockBox.cs" />
+    <Compile Include="RenderHtml\CssAnonymousBox.cs" />
+    <Compile Include="RenderHtml\CssBlock.cs" />
+    <Compile Include="RenderHtml\CssBox.cs" />
+    <Compile Include="RenderHtml\CssBoxWord.cs" />
+    <Compile Include="RenderHtml\CssBoxWordSplitter.cs" />
+    <Compile Include="RenderHtml\CssConstants.cs" />
+    <Compile Include="RenderHtml\CssDefaults.cs" />
+    <Compile Include="RenderHtml\CssDrawingHelper.cs" />
+    <Compile Include="RenderHtml\CssLayoutEngine.cs" />
+    <Compile Include="RenderHtml\CssLength.cs" />
+    <Compile Include="RenderHtml\CssLineBox.cs" />
+    <Compile Include="RenderHtml\CssPropertyAttribute.cs" />
+    <Compile Include="RenderHtml\CssPropertyInheritedAttribute.cs" />
+    <Compile Include="RenderHtml\CssRectangle.cs" />
+    <Compile Include="RenderHtml\CssTable.cs" />
+    <Compile Include="RenderHtml\CssValue.cs" />
+    <Compile Include="RenderHtml\HtmlConstants.cs" />
+    <Compile Include="RenderHtml\HtmlLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RenderHtml\HtmlPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RenderHtml\HtmlRenderer.cs" />
+    <Compile Include="RenderHtml\HtmlTag.cs" />
+    <Compile Include="RenderHtml\HtmlToolTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RenderHtml\InitialContainer.cs" />
+    <Compile Include="RenderHtml\Parser.cs" />
+    <Compile Include="SoftList.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ico.ico" />
+    <None Include="Resources\Blank.png" />
+    <None Include="Resources\aboutimg.png" />
+    <None Include="Resources\error.png" />
+    <None Include="Resources\info.png" />
+    <None Include="Resources\search.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
