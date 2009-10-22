@@ -1,33 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using System.Drawing;
 
 namespace SoftDB
 {
     [XmlRoot("Lists")]
     public class SoftLists
     {
-        private string _last;
         /// <summary>
         /// Last opened .vault
         /// </summary>
         [XmlAttribute("lastOpened")]
-        public string Last
-        {
-            get { return _last; }
-            set { _last = value; }
-        }
+        public string Last { get; set; }
+
         [XmlElement("List")]
-        public List<SoftListInfo> Vaults
+        public List<SoftListInfo> Vaults { get; set; }
+
+        public SoftLists()
         {
-            get { return _vaults; }
-            set { _vaults = value; }
+            Vaults = new List<SoftListInfo>();
         }
-
-        private List<SoftListInfo> _vaults=new List<SoftListInfo>();
-
     }
 
     [XmlRoot("Software")]
@@ -36,73 +27,49 @@ namespace SoftDB
 
     public class SoftListInfo
     {
-        private string _vault;
-        private string _title;
         [XmlAttribute("file")]
-        public string Vault
-        {
-            get { return _vault; }
-            set { _vault = value; }
-        }
+        public string Vault { get; set; }
+
         [XmlAttribute("name")]
-        public string Title
-        {
-            get { return _title; }
-            set { _title = value; }
-        }
+        public string Title { get; set; }
     }
 
     public class SoftItem
     {
-        private string _title = string.Empty;
-        private string _description = string.Empty;
-        private string _location = string.Empty;
-        private string _boxart = string.Empty;
+        public SoftItem()
+        {
+            Boxart = string.Empty;
+            Title = string.Empty;
+            Description = string.Empty;
+            Location = string.Empty;
+        }
 
         [XmlAttribute("location")]
-        public string Location
-        {
-            get { return _location; }
-            set { _location = value; }
-        }
+        public string Location { get; set; }
+
         [XmlElement("description")]
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
+        public string Description { get; set; }
+
         [XmlAttribute("title")]
-        public string Title
-        {
-            get { return _title; }
-            set { _title = value; }
-        }
+        public string Title { get; set; }
+
         [XmlElement("boxart")]
-        public string Boxart
-        {
-            get { return _boxart; }
-            set { _boxart = value; }
-        }
+        public string Boxart { get; set; }
     }
 
     public class Options
     {
-        private int _maxW = 512;
-        private int _maxH = 512;
+        public Options()
+        {
+            MaxH = 512;
+            MaxW = 512;
+        }
 
         public int Order { get; set; }
 
-        public int MaxW
-        {
-            get { return _maxW; }
-            set { _maxW = value; }
-        }
+        public int MaxW { get; set; }
 
-        public int MaxH
-        {
-            get { return _maxH; }
-            set { _maxH = value; }
-        }
+        public int MaxH { get; set; }
     }
    //eof
 }

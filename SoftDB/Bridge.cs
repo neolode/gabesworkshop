@@ -4,7 +4,6 @@ namespace SoftDB
 {
     public static class Bridge
     {
-        private static Bitmap _image;
         /// <summary>
         /// Gets the stylesheet for documents
         /// </summary>
@@ -31,10 +30,6 @@ namespace SoftDB
             get { return Properties.Resources.Blank; }
         }
 
-        public static Bitmap BuffImage
-        {
-            get { return _image; }
-            set { _image = value; }
-        }
+        public static Bitmap BuffImage { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 namespace PngSplit
 {
-    partial class frmMain
+    partial class FrmMain
     {
         /// <summary>
         /// Required designer variable.
@@ -188,8 +188,8 @@ namespace PngSplit
             // 
             // saveFileDialog1
             // 
-            this.saveFileDialog1.DefaultExt = "bmp";
-            this.saveFileDialog1.Filter = "Bitmap|*.bmp";
+            this.saveFileDialog1.DefaultExt = "_bmp";
+            this.saveFileDialog1.Filter = "Bitmap|*._bmp";
             // 
             // toolStripSeparator2
             // 
@@ -204,7 +204,7 @@ namespace PngSplit
             this.joinMode.Text = "Join Mode";
             this.joinMode.Click += new System.EventHandler(this.joinMode_Click);
             // 
-            // frmMain
+            // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -213,7 +213,7 @@ namespace PngSplit
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Name = "frmMain";
+            this.Name = "FrmMain";
             this.Text = "Png/Split";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

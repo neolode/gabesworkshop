@@ -1,10 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Collections;
 using System.ComponentModel;
 
 namespace mpui
@@ -82,7 +79,7 @@ namespace mpui
         /// <summary>
         /// The process used to run your task
         /// </summary>
-        private Process process;
+        private Process _process;
 
         /// <summary>
         /// Initialises a ProcessCaller with an association to the
@@ -119,14 +116,14 @@ namespace mpui
             StartProcess();
 
             // Wait for the process to end, or cancel it
-            while (! process.HasExited)
+            while (! _process.HasExited)
             {
                 Thread.Sleep(SleepTime); // sleep
                 if (CancelRequested)
                 {
                     // Not a very nice way to end a process,
                     // but effective.
-                    process.Kill();
+                    _process.Kill();
                     AcknowledgeCancel();
                 }
             }
@@ -139,15 +136,20 @@ namespace mpui
         protected virtual void StartProcess()
         {
             // Start a new process for the cmd
-            process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.FileName = FileName;
-            process.StartInfo.Arguments = Arguments;
-            process.StartInfo.WorkingDirectory = WorkingDirectory;
-            process.Start();
+            _process = new Process
+                           {
+                               StartInfo =
+                                   {
+                                       UseShellExecute = false,
+                                       RedirectStandardOutput = true,
+                                       RedirectStandardError = true,
+                                       CreateNoWindow = true,
+                                       FileName = FileName,
+                                       Arguments = Arguments,
+                                       WorkingDirectory = WorkingDirectory
+                                   }
+                           };
+            _process.Start();
 
             
             // Invoke stdOut and stdErr readers - each
@@ -166,7 +168,7 @@ namespace mpui
         protected virtual void ReadStdOut()
         {
             string str;
-            while ((str = process.StandardOutput.ReadLine()) != null)
+            while ((str = _process.StandardOutput.ReadLine()) != null)
             {
                 FireAsync(StdOutReceived, this, new DataReceivedEventArgs(str));
             }
@@ -178,7 +180,7 @@ namespace mpui
         protected virtual void ReadStdErr()
         {
             string str;
-            while ((str = process.StandardError.ReadLine()) != null)
+            while ((str = _process.StandardError.ReadLine()) != null)
             {
                 FireAsync(StdErrReceived, this, new DataReceivedEventArgs(str));
             }

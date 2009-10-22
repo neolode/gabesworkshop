@@ -242,6 +242,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
+            this.Opacity = 0.9;
             this.ShowInTaskbar = false;
             this.Text = "Student\'s Weather 2.0";
             this.TopMost = true;
