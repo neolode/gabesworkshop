@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
@@ -15,8 +12,8 @@ namespace vremea2
         static int elapse = 0;
         static bool doUpdate = false;
 
-        private int WM_NCLBUTTONDOWN = 161;
-        private int HTCAPTION = 2;
+        private const int WM_NCLBUTTONDOWN = 161;
+        private const int HTCAPTION = 2;
 
         [DllImport("user32.dll")]
         public static extern int SendMessageW(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -41,25 +38,25 @@ namespace vremea2
         private void Form1_Load(object sender, EventArgs e)
         {
             bgGetImage.RunWorkerAsync();
-            Rectangle wa = Screen.PrimaryScreen.WorkingArea;
-            this.SetBounds(wa.Width - (Width+10), wa.Height - (Height+10), Width, Height);
+            var wa = Screen.PrimaryScreen.WorkingArea;
+            SetBounds(wa.Width - (Width+10), wa.Height - (Height+10), Width, Height);
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             doUpdate = false;
-            inWorkShow();
+            InWorkShow();
             vr.Load("http://zeus.eed.usv.ro/~weather/ex1.png");
         }
 
         private void bgGetImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Bitmap buff = new Bitmap(vr.Image);
-            Color bg = buff.GetPixel(1, 1);
-            bool inthebutter = false;
-            for (int i = 0; i < buff.Size.Width; i++)
+            var buff = new Bitmap(vr.Image);
+            var bg = buff.GetPixel(1, 1);
+            var inthebutter = false;
+            for (var i = 0; i < buff.Size.Width; i++)
             {
-                for (int j = 0; j < buff.Size.Height; j++)
+                for (var j = 0; j < buff.Size.Height; j++)
                 {
 
                     if ((j > 380 && i < 100) ||
@@ -72,8 +69,8 @@ namespace vremea2
                         buff.SetPixel(i, j, bg);
                 }
             }
-            this.BackgroundImage = buff;
-            inWorkHide();
+            BackgroundImage = buff;
+            InWorkHide();
             btbGet.Show();
             elapse = 600000;
             getTimer.Start();
@@ -82,18 +79,18 @@ namespace vremea2
         }
         #region WorkingDialog
         delegate void WorkingDialogDelagate();
-        private void inWorkShow()
+        private void InWorkShow()
         {
             if (inWork.InvokeRequired)
-                inWork.Invoke(new WorkingDialogDelagate(inWorkShow));
+                inWork.Invoke(new WorkingDialogDelagate(InWorkShow));
             else
                 inWork.Show();
         }
 
-        private void inWorkHide()
+        private void InWorkHide()
         {
             if (inWork.InvokeRequired)
-                inWork.Invoke(new WorkingDialogDelagate(inWorkHide));
+                inWork.Invoke(new WorkingDialogDelagate(InWorkHide));
             else
                 inWork.Hide();
         }
@@ -152,11 +149,11 @@ namespace vremea2
         private void updateTimer_Tick(object sender, EventArgs e)
         {
             update.Text = "Update in: " + (int)(elapse / 1000) / 60 + ":" + (int)(elapse / 1000) % 60 +" min";
-            if(this.Visible)
-                this.notifyIcon.Text = "Student\'s Weather 2.0\r\nClick to hide"+
+            if(Visible)
+                notifyIcon.Text = "Student\'s Weather 2.0\r\nClick to hide"+
                     ( doUpdate ? "\r\nAutoupdate in: " + (int)(elapse / 1000) / 60 + ":" + (int)(elapse / 1000) % 60 + " min" : " ");
             else
-                this.notifyIcon.Text = "Student\'s Weather 2.0\r\nClick to show"+
+                notifyIcon.Text = "Student\'s Weather 2.0\r\nClick to show"+
                     (doUpdate ? "\r\nAutoupdate in: " + (int)(elapse / 1000) / 60 + ":" + (int)(elapse / 1000) % 60 + " min" : " ");
             Application.DoEvents();
         }
@@ -169,7 +166,7 @@ namespace vremea2
 
         private void notifyIcon_Click(object sender, EventArgs e)
         {
-            this.Visible = !this.Visible;
+            Visible = !Visible;
         }
     }
 }

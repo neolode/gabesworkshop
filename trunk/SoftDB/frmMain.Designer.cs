@@ -72,7 +72,7 @@
             this.tsSideBar.Location = new System.Drawing.Point(0, 0);
             this.tsSideBar.Name = "tsSideBar";
             this.tsSideBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.tsSideBar.Size = new System.Drawing.Size(64, 564);
+            this.tsSideBar.Size = new System.Drawing.Size(51, 564);
             this.tsSideBar.TabIndex = 0;
             this.tsSideBar.Text = "tsSideBar";
             // 
@@ -201,7 +201,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(64, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(51, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -211,8 +211,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.grpDetails);
-            this.splitContainer1.Size = new System.Drawing.Size(747, 564);
-            this.splitContainer1.SplitterDistance = 359;
+            this.splitContainer1.Size = new System.Drawing.Size(760, 564);
+            this.splitContainer1.SplitterDistance = 365;
             this.splitContainer1.TabIndex = 5;
             // 
             // grpList
@@ -221,7 +221,7 @@
             this.grpList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpList.Location = new System.Drawing.Point(0, 0);
             this.grpList.Name = "grpList";
-            this.grpList.Size = new System.Drawing.Size(359, 564);
+            this.grpList.Size = new System.Drawing.Size(365, 564);
             this.grpList.TabIndex = 4;
             this.grpList.TabStop = false;
             this.grpList.Text = "Soft list";
@@ -237,7 +237,7 @@
             this.lstSoftware.GridLines = true;
             this.lstSoftware.Location = new System.Drawing.Point(3, 16);
             this.lstSoftware.Name = "lstSoftware";
-            this.lstSoftware.Size = new System.Drawing.Size(353, 545);
+            this.lstSoftware.Size = new System.Drawing.Size(359, 545);
             this.lstSoftware.TabIndex = 4;
             this.lstSoftware.UseCompatibleStateImageBehavior = false;
             this.lstSoftware.View = System.Windows.Forms.View.Details;
@@ -260,7 +260,7 @@
             this.grpDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpDetails.Location = new System.Drawing.Point(0, 0);
             this.grpDetails.Name = "grpDetails";
-            this.grpDetails.Size = new System.Drawing.Size(384, 564);
+            this.grpDetails.Size = new System.Drawing.Size(391, 564);
             this.grpDetails.TabIndex = 3;
             this.grpDetails.TabStop = false;
             this.grpDetails.Text = "Details";
@@ -273,7 +273,7 @@
             this.htmlDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.htmlDetails.Location = new System.Drawing.Point(3, 16);
             this.htmlDetails.Name = "htmlDetails";
-            this.htmlDetails.Size = new System.Drawing.Size(378, 545);
+            this.htmlDetails.Size = new System.Drawing.Size(385, 545);
             this.htmlDetails.TabIndex = 2;
             // 
             // FrmMain

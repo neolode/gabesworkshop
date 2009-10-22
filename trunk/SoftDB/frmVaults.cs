@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using JsonExSerializer;
@@ -42,7 +37,7 @@ namespace SoftDB
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if ((bool)btnNew.Tag == true)
+            if ((bool)btnNew.Tag)
             {
                 FrmMain.Lists.Vaults.Add(new SoftListInfo { Title = textBox1.Text, Vault = textBox2.Text });
                 Serialization(typeof(SoftList), textBox2.Text, new SoftList());
