@@ -14,10 +14,12 @@ namespace miniws
         private ToolStripMenuItem _gantMenuItem;
         private ToolStripMenuItem _nameMenuItem;
         private ToolStripMenuItem _restartMenuItem;
+        private ToolStripMenuItem _logMenuItem;
         private ToolStripSeparator _separator1;
         private ToolStripSeparator _separator2;
         private ToolStripSeparator _separator3;
         private ToolStripSeparator _separator4;
+        private ToolStripSeparator _separator5;
         private ToolStripMenuItem _startStopMenuItem;
         private NotifyIcon _trayIcon;
         private ContextMenuStrip _trayMenu;
@@ -25,6 +27,8 @@ namespace miniws
 
         public TrayServer()
         {
+            //ProcessCaller p = new ProcessCaller(this);
+
             BuildMenu();
 
             var zs = ZMWSimport.zmws_get_version();
@@ -54,13 +58,14 @@ namespace miniws
             _versionMenuItem = new ToolStripMenuItem();
             _gantMenuItem = new ToolStripMenuItem();
             _separator3 = new ToolStripSeparator();
-
+            _separator5 = new ToolStripSeparator();
             _separator2 = new ToolStripSeparator();
             _startStopMenuItem = new ToolStripMenuItem();
             _restartMenuItem = new ToolStripMenuItem();
             _browseMenuItem = new ToolStripMenuItem();
             _separator1 = new ToolStripSeparator();
             _exitMenuItem = new ToolStripMenuItem();
+            _logMenuItem = new ToolStripMenuItem();
             // 
             // _trayIcon
             // 
@@ -79,6 +84,8 @@ namespace miniws
                                          {
                                              _aboutMenuItem,
                                              _separator2,
+                                             _logMenuItem,
+                                             _separator5,
                                              _startStopMenuItem,
                                              _restartMenuItem,
                                              _browseMenuItem,
@@ -179,7 +186,28 @@ namespace miniws
             _exitMenuItem.Size = new Size(168, 38);
             _exitMenuItem.Text = "Exit";
             _exitMenuItem.Click += ExitMenuItemClick;
+
             // 
+            // logToolStripMenuItem
+            // 
+            _logMenuItem.Image = Resources.log;
+            _logMenuItem.Name = "nameToolStripMenuItem";
+            _logMenuItem.Size = new Size(168, 38);
+            _logMenuItem.Text = "Log";
+            _logMenuItem.Visible = false;
+            _logMenuItem.Click += LogMenuItemClick;
+            // 
+            // toolStripSeparator4
+            // 
+            _separator5.Name = "toolStripSeparator5";
+            _separator5.Visible = false;
+            _separator5.Size = new Size(165, 6);
+            // 
+        }
+
+        private void LogMenuItemClick(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
@@ -215,6 +243,7 @@ namespace miniws
                 _startStopMenuItem.Text = "Start";
                 _startStopMenuItem.Image = Resources.run;
                 Runin = false;
+
             }
             else
             {
@@ -224,6 +253,8 @@ namespace miniws
                 Runin = true;
             }
             _browseMenuItem.Enabled = Runin;
+            //_logMenuItem.Visible = Runin;
+            //_separator5.Visible = Runin;
         }
 
 
