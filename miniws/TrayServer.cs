@@ -24,11 +24,12 @@ namespace miniws
         private NotifyIcon _trayIcon;
         private ContextMenuStrip _trayMenu;
         private ToolStripMenuItem _versionMenuItem;
-
+        private LogViewer logViewer;
         public TrayServer()
         {
             //ProcessCaller p = new ProcessCaller(this);
-
+            logViewer = new LogViewer();
+            ConsoleRedirector.attach(logViewer);
             BuildMenu();
 
             var zs = ZMWSimport.zmws_get_version();
@@ -84,11 +85,10 @@ namespace miniws
                                          {
                                              _aboutMenuItem,
                                              _separator2,
-                                             _logMenuItem,
-                                             _separator5,
                                              _startStopMenuItem,
                                              _restartMenuItem,
                                              _browseMenuItem,
+                                             _logMenuItem,
                                              _separator1,
                                              _exitMenuItem
                                          });
@@ -194,23 +194,22 @@ namespace miniws
             _logMenuItem.Name = "nameToolStripMenuItem";
             _logMenuItem.Size = new Size(168, 38);
             _logMenuItem.Text = "Log";
-            _logMenuItem.Visible = false;
+            _logMenuItem.Enabled = false;
             _logMenuItem.Click += LogMenuItemClick;
             // 
             // toolStripSeparator4
             // 
             _separator5.Name = "toolStripSeparator5";
-            _separator5.Visible = false;
+            //_separator5.Visible = false;
             _separator5.Size = new Size(165, 6);
             // 
         }
+        #endregion
 
         private void LogMenuItemClick(object sender, EventArgs e)
         {
-
+            logViewer.Visible = !logViewer.Visible;
         }
-
-        #endregion
 
         private static void GantMenuItemClick(object sender, EventArgs e)
         {
@@ -231,6 +230,8 @@ namespace miniws
         private void ExitMenuItemClick(object sender, EventArgs e)
         {
             ZMWSimport.zmws_stop();
+            logViewer.CanClose = true;
+            ConsoleRedirector.detatch();
             ExitThread();
         }
 
@@ -253,8 +254,8 @@ namespace miniws
                 Runin = true;
             }
             _browseMenuItem.Enabled = Runin;
-            //_logMenuItem.Visible = Runin;
-            //_separator5.Visible = Runin;
+            _logMenuItem.Enabled = Runin;
+            _separator5.Visible = Runin;
         }
 
 
