@@ -1,6 +1,6 @@
 ﻿namespace vremea2
 {
-    partial class frmMain
+    partial class FrmMain
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.bgGetImage = new System.ComponentModel.BackgroundWorker();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.inWork = new System.Windows.Forms.GroupBox();
@@ -55,9 +55,9 @@
             // bgGetImage
             // 
             this.bgGetImage.WorkerReportsProgress = true;
-            this.bgGetImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.bgGetImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgGetImage_RunWorkerCompleted);
-            this.bgGetImage.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgGetImage_ProgressChanged);
+            this.bgGetImage.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker1DoWork);
+            this.bgGetImage.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgGetImageRunWorkerCompleted);
+            this.bgGetImage.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BgGetImageProgressChanged);
             // 
             // progressBar1
             // 
@@ -92,7 +92,7 @@
             this.panel1.Size = new System.Drawing.Size(400, 100);
             this.panel1.TabIndex = 3;
             this.toolTips.SetToolTip(this.panel1, "Click and drag to move.");
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Panel1MouseDown);
             // 
             // btbGet
             // 
@@ -110,7 +110,7 @@
             this.toolTips.SetToolTip(this.btbGet, "Get the weather");
             this.btbGet.UseVisualStyleBackColor = true;
             this.btbGet.Visible = false;
-            this.btbGet.Click += new System.EventHandler(this.btbGet_Click);
+            this.btbGet.Click += new System.EventHandler(this.BtbGetClick);
             // 
             // btnExit
             // 
@@ -127,7 +127,7 @@
             this.btnExit.Text = "Exit";
             this.toolTips.SetToolTip(this.btnExit, "Close the application");
             this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            this.btnExit.Click += new System.EventHandler(this.BtnExitClick);
             // 
             // btnAbout
             // 
@@ -144,7 +144,7 @@
             this.btnAbout.Text = "About";
             this.toolTips.SetToolTip(this.btnAbout, "Abut..");
             this.btnAbout.UseVisualStyleBackColor = true;
-            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            this.btnAbout.Click += new System.EventHandler(this.BtnAboutClick);
             // 
             // modAbout
             // 
@@ -158,7 +158,7 @@
             this.modAbout.TabStop = false;
             this.modAbout.Text = "About";
             this.modAbout.Visible = false;
-            this.modAbout.VisibleChanged += new System.EventHandler(this.modAbout_VisibleChanged);
+            this.modAbout.VisibleChanged += new System.EventHandler(this.ModAboutVisibleChanged);
             // 
             // panel2
             // 
@@ -171,7 +171,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(254, 143);
             this.panel2.TabIndex = 0;
-            this.panel2.Click += new System.EventHandler(this.label1_Click);
+            this.panel2.Click += new System.EventHandler(this.Label1Click);
             // 
             // label1
             // 
@@ -187,7 +187,7 @@
             this.label1.Size = new System.Drawing.Size(223, 115);
             this.label1.TabIndex = 0;
             this.label1.Text = "Student\'s Weather 2.0\r\nGabriel Rotar\r\n\r\nWhat\'s new:\r\n*harmed code";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.label1.Click += new System.EventHandler(this.Label1Click);
             // 
             // update
             // 
@@ -204,16 +204,16 @@
             // getTimer
             // 
             this.getTimer.Interval = 600000;
-            this.getTimer.Tick += new System.EventHandler(this.getTimer_Tick);
+            this.getTimer.Tick += new System.EventHandler(this.GetTimerTick);
             // 
             // bgUpdate
             // 
-            this.bgUpdate.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgUpdate_DoWork);
+            this.bgUpdate.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgUpdateDoWork);
             // 
             // updateTimer
             // 
             this.updateTimer.Interval = 1000;
-            this.updateTimer.Tick += new System.EventHandler(this.updateTimer_Tick);
+            this.updateTimer.Tick += new System.EventHandler(this.UpdateTimerTick);
             // 
             // toolTips
             // 
@@ -226,7 +226,7 @@
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "Student\'s Weather 2.0\r\nAutoupdate in:";
             this.notifyIcon.Visible = true;
-            this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
+            this.notifyIcon.Click += new System.EventHandler(this.NotifyIconClick);
             // 
             // frmMain
             // 

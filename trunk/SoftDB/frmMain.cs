@@ -31,13 +31,13 @@ namespace SoftDB
             get { return _setings; }
         }
 
-        private void btnBarSearch_Click(object sender, EventArgs e)
+        private void BtnBarSearchClick(object sender, EventArgs e)
         {
             menuSearch.Show(MousePosition);
         }
 
         private bool _lock;
-        private void txtSearch_TextChanged(object sender, EventArgs e)
+        private void TxtSearchTextChanged(object sender, EventArgs e)
         {
             if (!_lock) DisplayList(Data);
             if (txtSearch.Text == string.Empty)
@@ -65,23 +65,23 @@ namespace SoftDB
 
         }
 
-        private void btnAbout_Click(object sender, EventArgs e)
+        private void BtnAboutClick(object sender, EventArgs e)
         {
-            var about = new frmAbout();
+            var about = new FrmAbout();
             about.ShowDialog(this);
         }
 
-        private void btnExit_Click(object sender, EventArgs e)
+        private void BtnExitClick(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void xToolStripMenuItem_Click(object sender, EventArgs e)
+        private void XToolStripMenuItemClick(object sender, EventArgs e)
         {
-            btnBarSearch_Click(sender, e);
+            BtnBarSearchClick(sender, e);
         }
 
-        private void yToolStripMenuItem_Click(object sender, EventArgs e)
+        private void YToolStripMenuItemClick(object sender, EventArgs e)
         {
             //MessageBox.Show("Insert");
             var itm = new FrmItem();
@@ -92,7 +92,7 @@ namespace SoftDB
 
         }
 
-        private void zToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ZToolStripMenuItemClick(object sender, EventArgs e)
         {
             //MessageBox.Show("Edit");
             if (lstSoftware.SelectedItems.Count <= 0) return;
@@ -104,7 +104,7 @@ namespace SoftDB
             DisplayList(Data);
         }
 
-        private void zzToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ZzToolStripMenuItemClick(object sender, EventArgs e)
         {
             //MessageBox.Show("Delete");
             if (lstSoftware.SelectedItems.Count <= 0) return;
@@ -186,7 +186,7 @@ namespace SoftDB
             lstSoftware.ResumeLayout();
         }
 
-        private void frmMain_Load(object sender, EventArgs e)
+        private void FrmMainLoad(object sender, EventArgs e)
         {
             if (!Directory.Exists(Application.StartupPath + @"\images"))
                 Directory.CreateDirectory(Application.StartupPath + @"\images");
@@ -220,13 +220,13 @@ namespace SoftDB
             lstSoftware.Sort();
         }
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmMainFormClosing(object sender, FormClosingEventArgs e)
         {
             //Serialization();
             Serialization(typeof(Options), @"/app.setings", Setings);
         }
 
-        private void lstSoftware_SelectedIndexChanged(object sender, EventArgs e)
+        private void LstSoftwareSelectedIndexChanged(object sender, EventArgs e)
         {
             //htmlDetails.Text = _welcome;
             if (lstSoftware.SelectedItems.Count <= 0) return;
@@ -257,15 +257,15 @@ namespace SoftDB
             htmlDetails.Text = buff;
         }
 
-        private void selectVaultToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SelectVaultToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var v = new frmVaults();
+            var v = new FrmVaults();
             v.ShowDialog(this);
             Data = (SoftList)DeSerialization(typeof(SoftList), @"/" + Lists.Last);
             DisplayList(Data);
         }
 
-        private void lstSoftware_ColumnClick(object sender, ColumnClickEventArgs e)
+        private void LstSoftwareColumnClick(object sender, ColumnClickEventArgs e)
         {
             lstSoftware.ListViewItemSorter = new ListViewItemComparer(e.Column);
             lstSoftware.Sort();
@@ -299,17 +299,17 @@ namespace SoftDB
 
         }
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ClearToolStripMenuItemClick(object sender, EventArgs e)
         {
             txtSearch.Text = string.Empty;
         }
 
-        private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
+        private void TxtSearchKeyPress(object sender, KeyPressEventArgs e)
         {
             //MessageBox.Show(e.KeyChar.ToString());
         }
 
-        private void txtSearch_KeyUp(object sender, KeyEventArgs e)
+        private void TxtSearchKeyUp(object sender, KeyEventArgs e)
         {
             //if (e.KeyCode== Keys.Escape)
             //{
