@@ -5,17 +5,17 @@ using JsonExSerializer;
 
 namespace SoftDB
 {
-    public partial class frmVaults : Form
+    public partial class FrmVaults : Form
     {
         private const string ChExcude = "~`!@#$%^&*()+=[]{};'\\:\"|,./<>?\n\r ";
 
-        public frmVaults()
+        public FrmVaults()
         {
             InitializeComponent();
             Height = 278;
         }
 
-        private void btnNew_Click(object sender, EventArgs e)
+        private void BtnNewClick(object sender, EventArgs e)
         {
             Height = 348;
             btnNew.Tag = true;
@@ -25,7 +25,7 @@ namespace SoftDB
             btnDelete.Enabled = false;
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private void BtnEditClick(object sender, EventArgs e)
         {
             Height = 348;
             //dissable new,edit,delete
@@ -35,7 +35,7 @@ namespace SoftDB
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1Click(object sender, EventArgs e)
         {
             if ((bool)btnNew.Tag)
             {
@@ -50,7 +50,7 @@ namespace SoftDB
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2Click(object sender, EventArgs e)
         {
             Height = 278;
             //enable edit butons
@@ -59,7 +59,7 @@ namespace SoftDB
             btnDelete.Enabled = true;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1TextChanged(object sender, EventArgs e)
         {
             if (File.Exists(Application.StartupPath + @"\" + textBox1.Text + ".vault"))
             {

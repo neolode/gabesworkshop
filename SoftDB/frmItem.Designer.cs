@@ -58,8 +58,8 @@
             this.picBoxart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picBoxart.TabIndex = 0;
             this.picBoxart.TabStop = false;
-            this.picBoxart.MouseLeave += new System.EventHandler(this.picBoxart_MouseLeave);
-            this.picBoxart.MouseEnter += new System.EventHandler(this.picBoxart_MouseEnter);
+            this.picBoxart.MouseLeave += new System.EventHandler(this.PicBoxartMouseLeave);
+            this.picBoxart.MouseEnter += new System.EventHandler(this.PicBoxartMouseEnter);
             // 
             // cmPic
             // 
@@ -76,14 +76,14 @@
             this.browseMenuItem.Name = "browseMenuItem";
             this.browseMenuItem.Size = new System.Drawing.Size(127, 22);
             this.browseMenuItem.Text = "...";
-            this.browseMenuItem.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.browseMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem2Click);
             // 
             // xMenuItem
             // 
             this.xMenuItem.Name = "xMenuItem";
             this.xMenuItem.Size = new System.Drawing.Size(127, 22);
             this.xMenuItem.Text = "x";
-            this.xMenuItem.Click += new System.EventHandler(this.xToolStripMenuItem_Click);
+            this.xMenuItem.Click += new System.EventHandler(this.XToolStripMenuItemClick);
             // 
             // txtTitle
             // 
@@ -151,14 +151,14 @@
             this.btnOk.TabIndex = 8;
             this.btnOk.Text = "Ok";
             this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            this.btnOk.Click += new System.EventHandler(this.BtnOkClick);
             // 
             // previousMenuItem
             // 
             this.previousMenuItem.Name = "previousMenuItem";
             this.previousMenuItem.Size = new System.Drawing.Size(127, 22);
             this.previousMenuItem.Text = ":::";
-            this.previousMenuItem.Click += new System.EventHandler(this.previousMenuItem_Click);
+            this.previousMenuItem.Click += new System.EventHandler(this.PreviousMenuItemClick);
             // 
             // FrmItem
             // 

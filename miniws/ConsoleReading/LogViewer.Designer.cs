@@ -37,14 +37,16 @@
             this.lstLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstLog.BackColor = System.Drawing.Color.Black;
+            this.lstLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstLog.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lstLog.ForeColor = System.Drawing.Color.White;
             this.lstLog.FormattingEnabled = true;
             this.lstLog.ItemHeight = 12;
-            this.lstLog.Location = new System.Drawing.Point(0, 2);
+            this.lstLog.Location = new System.Drawing.Point(0, 0);
             this.lstLog.Name = "lstLog";
             this.lstLog.ScrollAlwaysVisible = true;
-            this.lstLog.Size = new System.Drawing.Size(617, 278);
+            this.lstLog.Size = new System.Drawing.Size(617, 276);
             this.lstLog.TabIndex = 0;
             // 
             // LogViewer

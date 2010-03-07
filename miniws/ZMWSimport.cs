@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace miniws
 {
-    class ZMWSimport
+    class ZmwSimport
     {
         [DllImport("ZazouMiniWebServer.dll")]
         public static extern int zmws_easy_start();

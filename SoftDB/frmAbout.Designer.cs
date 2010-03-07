@@ -1,6 +1,6 @@
 ﻿namespace SoftDB
 {
-    partial class frmAbout
+    partial class FrmAbout
     {
         /// <summary>
         /// Required designer variable.

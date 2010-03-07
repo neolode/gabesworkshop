@@ -1,6 +1,6 @@
 ﻿namespace SoftDB
 {
-    partial class frmVaults
+    partial class FrmVaults
     {
         /// <summary>
         /// Required designer variable.
@@ -72,7 +72,7 @@
             this.btnNew.TabIndex = 1;
             this.btnNew.Text = "New...";
             this.btnNew.UseVisualStyleBackColor = true;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            this.btnNew.Click += new System.EventHandler(this.BtnNewClick);
             // 
             // btnDelete
             // 
@@ -91,7 +91,7 @@
             this.btnEdit.TabIndex = 3;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            this.btnEdit.Click += new System.EventHandler(this.BtnEditClick);
             // 
             // groupBox1
             // 
@@ -116,7 +116,7 @@
             this.btnItmCancel.TabIndex = 5;
             this.btnItmCancel.Text = "Cancel";
             this.btnItmCancel.UseVisualStyleBackColor = true;
-            this.btnItmCancel.Click += new System.EventHandler(this.button2_Click);
+            this.btnItmCancel.Click += new System.EventHandler(this.Button2Click);
             // 
             // btnItmOk
             // 
@@ -126,7 +126,7 @@
             this.btnItmOk.TabIndex = 4;
             this.btnItmOk.Text = "Ok";
             this.btnItmOk.UseVisualStyleBackColor = true;
-            this.btnItmOk.Click += new System.EventHandler(this.button1_Click);
+            this.btnItmOk.Click += new System.EventHandler(this.Button1Click);
             // 
             // label2
             // 
@@ -160,7 +160,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(206, 20);
             this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.TextChanged += new System.EventHandler(this.TextBox1TextChanged);
             // 
             // frmVaults
             // 

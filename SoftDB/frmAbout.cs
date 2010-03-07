@@ -2,9 +2,9 @@
 
 namespace SoftDB
 {
-    public partial class frmAbout : Form
+    public partial class FrmAbout : Form
     {
-        public frmAbout()
+        public FrmAbout()
         {
             InitializeComponent();
         }

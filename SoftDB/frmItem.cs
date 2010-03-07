@@ -47,7 +47,7 @@ namespace SoftDB
             return _defaultResult;
         }
 
-        private void btnOk_Click(object sender, EventArgs e)
+        private void BtnOkClick(object sender, EventArgs e)
         {
             string img = picBoxart.ImageLocation;
             bool dob = false;
@@ -148,15 +148,15 @@ namespace SoftDB
             return File.Exists(path + f) ? GetFilename(rx, path) : f;
         }
 
-        private void picBoxart_MouseEnter(object sender, EventArgs e)
+        private void PicBoxartMouseEnter(object sender, EventArgs e)
         {
         }
 
-        private void picBoxart_MouseLeave(object sender, EventArgs e)
+        private void PicBoxartMouseLeave(object sender, EventArgs e)
         {
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void ToolStripMenuItem2Click(object sender, EventArgs e)
         {
             bool ck1 = false;
             if (picBoxart.Image != null)
@@ -185,7 +185,7 @@ namespace SoftDB
             if (ck1) _remold = true;
         }
 
-        private void xToolStripMenuItem_Click(object sender, EventArgs e)
+        private void XToolStripMenuItemClick(object sender, EventArgs e)
         {
             picBoxart.Image = null;
             if (File.Exists(Application.StartupPath + @"\images\" + Item.Boxart))
@@ -219,7 +219,7 @@ namespace SoftDB
             _pth = openImage.InitialDirectory;
         }
 
-        private void previousMenuItem_Click(object sender, EventArgs e)
+        private void PreviousMenuItemClick(object sender, EventArgs e)
         {
             bool ck1 = false;
             if (picBoxart.Image != null)

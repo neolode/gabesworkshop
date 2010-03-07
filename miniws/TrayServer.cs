@@ -32,7 +32,7 @@ namespace miniws
             ConsoleRedirector.attach(logViewer);
             BuildMenu();
 
-            var zs = ZMWSimport.zmws_get_version();
+            var zs = ZmwSimport.zmws_get_version();
             _versionMenuItem.Text = "ZazouMiniWebserver\nDll v:" + zs;
             _nameMenuItem.Text = "MiniWS " + Version() + "\nGabriel Rotar\n2008";
             _gantMenuItem.Text =
@@ -229,7 +229,7 @@ namespace miniws
 
         private void ExitMenuItemClick(object sender, EventArgs e)
         {
-            ZMWSimport.zmws_stop();
+            ZmwSimport.zmws_stop();
             logViewer.CanClose = true;
             ConsoleRedirector.detatch();
             ExitThread();
@@ -240,7 +240,7 @@ namespace miniws
         {
             if (Runin)
             {
-                ZMWSimport.zmws_stop();
+                ZmwSimport.zmws_stop();
                 _startStopMenuItem.Text = "Start";
                 _startStopMenuItem.Image = Resources.run;
                 Runin = false;
@@ -248,7 +248,7 @@ namespace miniws
             }
             else
             {
-                ZMWSimport.zmws_easy_start();
+                ZmwSimport.zmws_easy_start();
                 _startStopMenuItem.Text = "Stop";
                 _startStopMenuItem.Image = Resources.stop;
                 Runin = true;
@@ -261,14 +261,14 @@ namespace miniws
 
         private static void BrowseMenuItemClick(object sender, EventArgs e)
         {
-            ZMWSimport.zmws_browse();
+            ZmwSimport.zmws_browse();
         }
 
         private void TrayMenuOpened(object sender, EventArgs e)
         {
             _browseMenuItem.Enabled = Runin;
             _restartMenuItem.Enabled = Runin;
-            _browseMenuItem.Text = "Browse (:" + ZMWSimport.zmws_get_port() + ")";
+            _browseMenuItem.Text = "Browse (:" + ZmwSimport.zmws_get_port() + ")";
         }
 
 

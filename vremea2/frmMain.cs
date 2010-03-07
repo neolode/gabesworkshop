@@ -6,22 +6,22 @@ using System.Runtime.InteropServices;
 
 namespace vremea2
 {
-    public partial class frmMain : Form
+    public partial class FrmMain : Form
     {
-        PictureBox vr = new PictureBox();
-        static int elapse = 0;
-        static bool doUpdate = false;
+        readonly PictureBox _vr = new PictureBox();
+        static int _elapse;
+        static bool _doUpdate;
 
-        private const int WM_NCLBUTTONDOWN = 161;
-        private const int HTCAPTION = 2;
+        private const int WmNclbuttondown = 161;
+        private const int Htcaption = 2;
 
         [DllImport("user32.dll")]
-        public static extern int SendMessageW(IntPtr hWnd, int Msg, int wParam, int lParam);
+        public static extern int SendMessageW(IntPtr hWnd, int msg, int wParam, int lParam);
 
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        public frmMain()
+        public FrmMain()
         {
             InitializeComponent();
             Width = BackgroundImage.Width;
@@ -42,29 +42,28 @@ namespace vremea2
             SetBounds(wa.Width - (Width+10), wa.Height - (Height+10), Width, Height);
         }
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker1DoWork(object sender, DoWorkEventArgs e)
         {
-            doUpdate = false;
+            _doUpdate = false;
             InWorkShow();
-            vr.Load("http://zeus.eed.usv.ro/~weather/ex1.png");
+            _vr.Load("http://zeus.eed.usv.ro/~weather/ex1.png");
         }
 
-        private void bgGetImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void BgGetImageRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            var buff = new Bitmap(vr.Image);
+            var buff = new Bitmap(_vr.Image);
             var bg = buff.GetPixel(1, 1);
-            var inthebutter = false;
             for (var i = 0; i < buff.Size.Width; i++)
             {
                 for (var j = 0; j < buff.Size.Height; j++)
                 {
-
+                    var inthebutter = false;
                     if ((j > 380 && i < 100) ||
                         (i > 170 && j > 120 && i < 350 && j < 150) ||
                         (i > 48 && j > 200 && i < 200 && j < 225))
                         inthebutter = true;
-                    else
-                        inthebutter = false;
+                    //else
+                    //    inthebutter = false;
                     if (inthebutter)
                         buff.SetPixel(i, j, bg);
                 }
@@ -72,9 +71,9 @@ namespace vremea2
             BackgroundImage = buff;
             InWorkHide();
             btbGet.Show();
-            elapse = 600000;
+            _elapse = 600000;
             getTimer.Start();
-            doUpdate = true;
+            _doUpdate = true;
             update.Show();
         }
         #region WorkingDialog
@@ -95,13 +94,13 @@ namespace vremea2
                 inWork.Hide();
         }
         #endregion
-        private void bgGetImage_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void BgGetImageProgressChanged(object sender, ProgressChangedEventArgs e)
         { }
 
-        private void btnExit_Click(object sender, EventArgs e)
+        private void BtnExitClick(object sender, EventArgs e)
         { Close(); }
 
-        private void btbGet_Click(object sender, EventArgs e)
+        private void BtbGetClick(object sender, EventArgs e)
         {
             bgGetImage.RunWorkerAsync();
             btbGet.Hide();
@@ -109,7 +108,7 @@ namespace vremea2
             update.Hide();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Label1Click(object sender, EventArgs e)
         {
             modAbout.Hide();
             btnExit.Show();
@@ -117,7 +116,7 @@ namespace vremea2
             btbGet.Show();
         }
 
-        private void btnAbout_Click(object sender, EventArgs e)
+        private void BtnAboutClick(object sender, EventArgs e)
         {
             modAbout.Show();
             btnAbout.Hide();
@@ -125,46 +124,46 @@ namespace vremea2
             btnExit.Hide();
         }
 
-        private void modAbout_VisibleChanged(object sender, EventArgs e)
+        private void ModAboutVisibleChanged(object sender, EventArgs e)
         { }
 
-        private void getTimer_Tick(object sender, EventArgs e)
+        private void GetTimerTick(object sender, EventArgs e)
         {
             bgGetImage.RunWorkerAsync();
             btbGet.Hide();
         }
 
-        private void bgUpdate_DoWork(object sender, DoWorkEventArgs e)
+        private void BgUpdateDoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
             {
-                if (!doUpdate) continue;
+                if (!_doUpdate) continue;
                 System.Threading.Thread.Sleep(1);
-                elapse--;
+                _elapse--;
                 //Elapse();
                 Application.DoEvents();
             }
         }
 
-        private void updateTimer_Tick(object sender, EventArgs e)
+        private void UpdateTimerTick(object sender, EventArgs e)
         {
-            update.Text = "Update in: " + (int)(elapse / 1000) / 60 + ":" + (int)(elapse / 1000) % 60 +" min";
+            update.Text = "Update in: " + (int)(_elapse / 1000) / 60 + ":" + (int)(_elapse / 1000) % 60 +" min";
             if(Visible)
                 notifyIcon.Text = "Student\'s Weather 2.0\r\nClick to hide"+
-                    ( doUpdate ? "\r\nAutoupdate in: " + (int)(elapse / 1000) / 60 + ":" + (int)(elapse / 1000) % 60 + " min" : " ");
+                    ( _doUpdate ? "\r\nAutoupdate in: " + (int)(_elapse / 1000) / 60 + ":" + (int)(_elapse / 1000) % 60 + " min" : " ");
             else
                 notifyIcon.Text = "Student\'s Weather 2.0\r\nClick to show"+
-                    (doUpdate ? "\r\nAutoupdate in: " + (int)(elapse / 1000) / 60 + ":" + (int)(elapse / 1000) % 60 + " min" : " ");
+                    (_doUpdate ? "\r\nAutoupdate in: " + (int)(_elapse / 1000) / 60 + ":" + (int)(_elapse / 1000) % 60 + " min" : " ");
             Application.DoEvents();
         }
 
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        private void Panel1MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
-            SendMessageW(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+            SendMessageW(Handle, WmNclbuttondown, Htcaption, 0);
         }
 
-        private void notifyIcon_Click(object sender, EventArgs e)
+        private void NotifyIconClick(object sender, EventArgs e)
         {
             Visible = !Visible;
         }

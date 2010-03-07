@@ -86,7 +86,7 @@
             this.btnBarSearch.Size = new System.Drawing.Size(50, 50);
             this.btnBarSearch.Text = "Search...";
             this.btnBarSearch.Visible = false;
-            this.btnBarSearch.Click += new System.EventHandler(this.btnBarSearch_Click);
+            this.btnBarSearch.Click += new System.EventHandler(this.BtnBarSearchClick);
             // 
             // btnExit
             // 
@@ -98,7 +98,7 @@
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(50, 50);
             this.btnExit.Text = "Exit";
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            this.btnExit.Click += new System.EventHandler(this.BtnExitClick);
             // 
             // btnAbout
             // 
@@ -110,7 +110,7 @@
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(50, 50);
             this.btnAbout.Text = "About...";
-            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            this.btnAbout.Click += new System.EventHandler(this.BtnAboutClick);
             // 
             // toolStripDropDownButton1
             // 
@@ -134,7 +134,7 @@
             this.xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.xToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.xToolStripMenuItem.Text = "Search";
-            this.xToolStripMenuItem.Click += new System.EventHandler(this.xToolStripMenuItem_Click);
+            this.xToolStripMenuItem.Click += new System.EventHandler(this.XToolStripMenuItemClick);
             // 
             // yToolStripMenuItem
             // 
@@ -142,7 +142,7 @@
             this.yToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
             this.yToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.yToolStripMenuItem.Text = "Add";
-            this.yToolStripMenuItem.Click += new System.EventHandler(this.yToolStripMenuItem_Click);
+            this.yToolStripMenuItem.Click += new System.EventHandler(this.YToolStripMenuItemClick);
             // 
             // zToolStripMenuItem
             // 
@@ -150,7 +150,7 @@
             this.zToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
             this.zToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.zToolStripMenuItem.Text = "Edit";
-            this.zToolStripMenuItem.Click += new System.EventHandler(this.zToolStripMenuItem_Click);
+            this.zToolStripMenuItem.Click += new System.EventHandler(this.ZToolStripMenuItemClick);
             // 
             // zzToolStripMenuItem
             // 
@@ -158,7 +158,7 @@
             this.zzToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
             this.zzToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.zzToolStripMenuItem.Text = "Delete";
-            this.zzToolStripMenuItem.Click += new System.EventHandler(this.zzToolStripMenuItem_Click);
+            this.zzToolStripMenuItem.Click += new System.EventHandler(this.ZzToolStripMenuItemClick);
             // 
             // selectVaultToolStripMenuItem
             // 
@@ -166,7 +166,7 @@
             this.selectVaultToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.selectVaultToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.selectVaultToolStripMenuItem.Text = "SelectVault";
-            this.selectVaultToolStripMenuItem.Click += new System.EventHandler(this.selectVaultToolStripMenuItem_Click);
+            this.selectVaultToolStripMenuItem.Click += new System.EventHandler(this.SelectVaultToolStripMenuItemClick);
             // 
             // menuSearch
             // 
@@ -184,10 +184,10 @@
             this.txtSearch.Margin = new System.Windows.Forms.Padding(10, 1, 1, 1);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(200, 23);
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyUp);
-            this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
-            this.txtSearch.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyUp);
-            this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearchKeyUp);
+            this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtSearchKeyPress);
+            this.txtSearch.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtSearchKeyUp);
+            this.txtSearch.TextChanged += new System.EventHandler(this.TxtSearchTextChanged);
             // 
             // clearToolStripMenuItem
             // 
@@ -196,7 +196,7 @@
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(200, 23);
             this.clearToolStripMenuItem.Text = "clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItemClick);
             // 
             // splitContainer1
             // 
@@ -241,8 +241,8 @@
             this.lstSoftware.TabIndex = 4;
             this.lstSoftware.UseCompatibleStateImageBehavior = false;
             this.lstSoftware.View = System.Windows.Forms.View.Details;
-            this.lstSoftware.SelectedIndexChanged += new System.EventHandler(this.lstSoftware_SelectedIndexChanged);
-            this.lstSoftware.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lstSoftware_ColumnClick);
+            this.lstSoftware.SelectedIndexChanged += new System.EventHandler(this.LstSoftwareSelectedIndexChanged);
+            this.lstSoftware.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.LstSoftwareColumnClick);
             // 
             // colTitle
             // 
@@ -286,8 +286,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
             this.Text = "Soft DB";
-            this.Load += new System.EventHandler(this.frmMain_Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Load += new System.EventHandler(this.FrmMainLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMainFormClosing);
             this.tsSideBar.ResumeLayout(false);
             this.tsSideBar.PerformLayout();
             this.menuSearch.ResumeLayout(false);
