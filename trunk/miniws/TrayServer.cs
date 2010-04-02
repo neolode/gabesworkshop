@@ -30,11 +30,11 @@ namespace miniws
             //ProcessCaller p = new ProcessCaller(this);
             logViewer = new LogViewer();
             ConsoleRedirector.attach(logViewer);
-            BuildMenu();
-
+            BuildMenu();        
+            
             var zs = ZmwSimport.zmws_get_version();
             _versionMenuItem.Text = "ZazouMiniWebserver\nDll v:" + zs;
-            _nameMenuItem.Text = "MiniWS " + Version() + "\nGabriel Rotar\n2008";
+            _nameMenuItem.Text = "MiniWS " + Version() + "\nGabriel Rotar\n2008-"+DateTime.Now.Year;
             _gantMenuItem.Text =
                 "Graphical resources from G.A.N.T. \r\n(C) Paul Davey \r\nmattahan.deviantart.com";
         }
@@ -203,6 +203,30 @@ namespace miniws
             //_separator5.Visible = false;
             _separator5.Size = new Size(165, 6);
             // 
+            _trayMenu.DropShadowEnabled = true;
+
+            _trayMenu.MouseLeave += new EventHandler(_trayMenu_MouseLeave);
+            _trayMenu.MouseEnter += new EventHandler(_trayMenu_MouseEnter);
+            _aboutMenuItem.DropDown.VisibleChanged += new EventHandler(DropDown_VisibleChanged);
+        }
+
+        void _trayMenu_MouseEnter(object sender, EventArgs e)
+        {
+            if (_aboutMenuItem.Selected) return;
+            _aboutMenuItem.DropDown.Hide();
+        }
+        bool about_visible = false;
+        void DropDown_VisibleChanged(object sender, EventArgs e)
+        {
+            about_visible = _aboutMenuItem.DropDown.Visible;
+        }
+        
+
+
+        void _trayMenu_MouseLeave(object sender, EventArgs e)
+        {
+            if (about_visible) return;
+            _trayMenu.Close();
         }
         #endregion
 
@@ -283,8 +307,10 @@ namespace miniws
         private void TrayIconClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
-            if (!_trayMenu.Visible)
-                _trayMenu.Show(Control.MousePosition.X, Control.MousePosition.Y);
+            if (!_trayMenu.Visible){
+                _trayMenu.Show(Control.MousePosition, ToolStripDropDownDirection.BelowLeft);
+                _trayMenu.Focus();
+            }
             else
                 _trayMenu.Hide();
         }
