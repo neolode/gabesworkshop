@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3C17CA5B-D037-49A7-9F9C-E162F3A3CBC8}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>miniws</RootNamespace>
     <AssemblyName>miniws</AssemblyName>
@@ -79,6 +79,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Setings\SetingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Setings\SetingForm.Designer.cs">
+      <DependentUpon>SetingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Setings\Setings.cs" />
     <Compile Include="TrayServer.cs" />
     <Compile Include="ZMWSimport.cs" />
   </ItemGroup>
