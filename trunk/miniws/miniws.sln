@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miniws", "miniws.csproj", "{3C17CA5B-D037-49A7-9F9C-E162F3A3CBC8}"
 EndProject
 Global
