@@ -42,6 +42,7 @@
             this.lstLog.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lstLog.ForeColor = System.Drawing.Color.White;
             this.lstLog.FormattingEnabled = true;
+            this.lstLog.IntegralHeight = false;
             this.lstLog.ItemHeight = 12;
             this.lstLog.Location = new System.Drawing.Point(0, 0);
             this.lstLog.Name = "lstLog";
