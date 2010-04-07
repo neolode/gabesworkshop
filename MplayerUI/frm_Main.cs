@@ -1,8 +1,10 @@
 #region Using
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Windows.Forms;
 
@@ -16,9 +18,12 @@ namespace mpui
     /// </summary>
     public partial class FrmMain
     {
+        // ReSharper disable FieldCanBeMadeReadOnly.Local
+        // ReSharper disable ConvertToConstant.Local
+        // ReSharper disable InconsistentNaming
         private string Head = "<html><head><style type=\"text/css\">body{"
                                     + "background: #000;"
-                                    + "font-family: Helvetica, sans-serif;"
+                                    + "font-family: Lucida Console, sans-serif;"
                                     + "font-size: 11px;"
                                     + "line-height: 18px;"
                                     + "color: #aaa;"
@@ -33,15 +38,20 @@ namespace mpui
                                     + "background-repeat:no-repeat;"
                                     + "background-position:center center;"
                                     + "background-attachment:fixed}</style></head><body>";
+
         private string saveHead = "<html>\n<head>\n<style type=\"text/css\">\nbody{\n"
                             + "background: #000;\n"
-                            + "font-family: Helvetica, sans-serif;\n"
+                            + "font-family: Lucida Console, sans-serif;\n"
                             + "font-size: 11px;\n"
                             + "line-height: 18px;\n"
                             + "color: #aaa;\n}\n</style>\n</head>\n<body>\n";
+        // ReSharper restore InconsistentNaming
+        // ReSharper restore ConvertToConstant.Local
+        // ReSharper restore FieldCanBeMadeReadOnly.Local
         private ProcessCaller _processCaller;
         private bool _ranArgs;
 
+        private StringBuilder _strbuff;
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -52,9 +62,13 @@ namespace mpui
             wb_log.AllowNavigation = true;
             wb_log.Navigate("about:blank");
 
-            wb_log.Document.OpenNew(true);
-            wb_log.Document.Write(Head);
+            if (wb_log.Document != null)
+            {
+                wb_log.Document.OpenNew(true);
+                wb_log.Document.Write(Head);
+            }
             lblStatus.Text = string.Empty;
+            lblNotices.Text = string.Empty;
         }
 
         /// <summary>
@@ -67,35 +81,108 @@ namespace mpui
         /// </remarks>
         private void WriteStreamInfo(object sender, DataReceivedEventArgs e)
         {
+            string message = e.Text.Replace('\r', ' ');
             if (e.Text.StartsWith("A:"))
-                lblStatus.Text = e.Text;
-            else if (e.Text.StartsWith("V:"))
-                lblStatus.Text = e.Text;
-            else if (e.Text.StartsWith("A:"))
-                lblStatus.Text = e.Text;
-            else
             {
-                WbLogAppendText(e.Text + "\n");
+                lblStatus.Text = e.Text;
+                return;
+            }
+            if (e.Text.StartsWith("V:"))
+            {
+                lblStatus.Text = e.Text;
+                return;
+            }
+            if (e.Text.StartsWith("Exiting"))
+            {
+                lblNotices.Text = e.Text;
+                return;
+            }
+            if (e.Text.StartsWith("Movie-Aspect"))
+            {
+                lblNotices.Text = e.Text;
+                return;
+            }
+            if (e.Text.StartsWith("VO:"))
+            {
+                lblNotices.Text = e.Text;
+                return;
+            }
+            if (e.Text.StartsWith("Decreasing video pts:"))
+            {
+                lblNotices.Text = e.Text;
+                return;
+            }
+            if (e.Text.ToLower().Contains("font"))
+            {
+                lblStatus.Text = e.Text;
+                return;
+            }
+
+            foreach (var s in message.Split('\n'))
+            {
+                if (s.Trim() == string.Empty) continue;
+                WbLogAppendText(s.Trim());
             }
         }
 
+        // ReSharper disable FieldCanBeMadeReadOnly.Local
+        List<string> _repperr = new List<string>();
+        // ReSharper restore FieldCanBeMadeReadOnly.Local
+        private string _lasterr = string.Empty;
+        private int _errcount;
         private void WriteStreamErr(object sender, DataReceivedEventArgs e)
         {
-            WbLogAppendError(e.Text + "\n");
+            string error = e.Text.Trim(new[] { ' ', '\n', '\r' });
+            if (error == string.Empty) return;
+            if (_lasterr == error) _errcount++;
+            else
+                if (_errcount != 0)
+                {
+                    WbLogAppendError("x" + _errcount + 1 + "\n" + error + "\n");
+                    _repperr.Add(_lasterr + " ->->-> " + _errcount + 1 + "times");
+                    _errcount = 0;
+                }
+                else
+                {
+                    WbLogAppendError(error + "\n");
+                    _repperr.Add(error);
+                }
+            _lasterr = error;
         }
 
         private void WbLogAppendError(string s)
         {
-            wb_log.Document.Write("<font color=red>" + (HttpUtility.HtmlEncode(s).Replace("\n", "</br>")) + "</font>\n");
+            if (!ckShowErrors.Checked) return;
+            _strbuff = new StringBuilder();
+            _strbuff.Append("<font color=red>");
+            _strbuff.Append(HttpUtility.HtmlEncode(s));
+            _strbuff.Append("</font></br>\n");
+
+            if (wb_log.Document == null) return;
+            if (wb_log.Document.Body == null) return;
+
+            WbLogAppendHtml(_strbuff.ToString());
+
             wb_log.Document.Body.ScrollTop = wb_log.Document.Body.ScrollRectangle.Bottom;
         }
 
         private void WbLogAppendText(string p)
         {
-            wb_log.Document.Write(HttpUtility.HtmlEncode(p).Replace("\n", "</br>\n"));
+            if (wb_log.Document == null) return;
+            if (wb_log.Document.Body == null) return;
+
+            WbLogAppendHtml(HttpUtility.HtmlEncode(p));
+            WbLogAppendHtml("</br>");
             wb_log.Document.Body.ScrollTop = wb_log.Document.Body.ScrollRectangle.Bottom;
         }
 
+        private void WbLogAppendHtml(string h)
+        {
+            // ReSharper disable PossibleNullReferenceException
+            wb_log.Document.Write(h);
+            wb_log.Document.Body.ScrollTop = wb_log.Document.Body.ScrollRectangle.Bottom;
+            // ReSharper restore PossibleNullReferenceException
+        }
 
         /// <summary>
         /// Handles the events of processCompleted and processCanceled
@@ -119,7 +206,7 @@ namespace mpui
         {
             Cursor = Cursors.Default;
             btnInfo.Enabled = true;
-            MessageBox.Show("Mplayer not present", "Error!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            WbLogAppendError("Critical error!! : Mplayer not present");
         }
 
         private void TsBtnExitClick(object sender, EventArgs e)
@@ -136,7 +223,12 @@ namespace mpui
 
         private void TsBtnAboutClick(object sender, EventArgs e)
         {
-            MessageBox.Show("Mplayer UI\n(c)Gabriel 'Lode' Rotar 2009");
+            WbLogAppendHtml("<pre>");
+            WbLogAppendHtml("+---------------------------+\n");
+            WbLogAppendHtml("|         Mplayer UI        |\n");
+            WbLogAppendHtml("| Gabriel 'Lode' Rotar 2009 |\n");
+            WbLogAppendHtml("+---------------------------+\n");
+            WbLogAppendHtml("</pre>");
         }
 
 
@@ -150,13 +242,14 @@ namespace mpui
 
         private void TsBtnInnounpClick(object sender, EventArgs e)
         {
-            CallConsole(null);
+            RunCliApp(null);
         }
 
         private void CmLogClearClick(object sender, EventArgs e)
         {
-            //wb_log.AllowNavigation = true;
-            //wb_log.Navigate("about:blank");
+            if (wb_log.Document == null) return;
+            if (wb_log.Document.Body == null) return;
+
             wb_log.Document.OpenNew(true);
             wb_log.Document.Write(Head);
         }
@@ -180,11 +273,11 @@ namespace mpui
                 string args = null;
                 for (int i = 1; i < Environment.GetCommandLineArgs().Length; i++)
                     args = args + " " + Environment.GetCommandLineArgs()[i];
-                args = args.Trim();
+                if (args != null) args = args.Trim();
                 //Remove if not debuging
                 WbLogAppendText("Opening: \n" + args + "\n\n");
 
-                CallConsole("\"" + args + "\"");
+                RunCliApp("\"" + args + "\"");
                 _ranArgs = false;
             }
         }
@@ -246,7 +339,7 @@ namespace mpui
         /// <summary>
         /// Fully transparent parameter transmision to the Inno Unpacker
         /// </summary>
-        private void CallConsole(string args)
+        private void RunCliApp(string args)
         {
             Cursor = Cursors.AppStarting;
             btnInfo.Enabled = false;
@@ -265,7 +358,7 @@ namespace mpui
 
         #endregion
 
-        private void wb_log_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private void WbLogNavigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             if (!e.Url.Host.Equals(string.Empty))
                 e.Cancel = true;
@@ -274,7 +367,7 @@ namespace mpui
             string p = HttpUtility.UrlDecode(e.Url.AbsolutePath);
             FindAndKillProcess("mplayer");
             WbLogAppendText("Opening: \n" + p + "\n\n");
-            CallConsole("\"" + p + "\"");
+            RunCliApp("\"" + p + "\"");
         }
     }
 }

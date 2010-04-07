@@ -1,6 +1,6 @@
 ﻿namespace miniws
 {
-    partial class miniwsForm
+    partial class MiniwsForm
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(miniwsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MiniwsForm));
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -51,10 +51,10 @@
             this.webBrowser.Size = new System.Drawing.Size(792, 551);
             this.webBrowser.TabIndex = 0;
             this.webBrowser.Url = new System.Uri("", System.UriKind.Relative);
-            this.webBrowser.ProgressChanged += new System.Windows.Forms.WebBrowserProgressChangedEventHandler(this.webBrowser_ProgressChanged);
-            this.webBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.webBrowser_Navigating);
-            this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser_DocumentCompleted);
-            this.webBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.webBrowser_Navigated);
+            this.webBrowser.ProgressChanged += new System.Windows.Forms.WebBrowserProgressChangedEventHandler(this.WebBrowserProgressChanged);
+            this.webBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.WebBrowserNavigating);
+            this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.WebBrowserDocumentCompleted);
+            this.webBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.WebBrowserNavigated);
             // 
             // statusStrip1
             // 
@@ -90,7 +90,7 @@
             this.homeButton.Size = new System.Drawing.Size(16, 17);
             this.homeButton.Text = "toolStripStatusLabel1";
             this.homeButton.ToolTipText = "127.0.0.1, sweet 127.0.0.1";
-            this.homeButton.Click += new System.EventHandler(this.homeButton_Click);
+            this.homeButton.Click += new System.EventHandler(this.HomeButtonClick);
             // 
             // backButton
             // 
@@ -101,7 +101,7 @@
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(16, 17);
             this.backButton.Text = "toolStripSplitButton1";
-            this.backButton.Click += new System.EventHandler(this.backButton_Click);
+            this.backButton.Click += new System.EventHandler(this.BackButtonClick);
             // 
             // nextButton
             // 
@@ -111,7 +111,7 @@
             this.nextButton.Name = "nextButton";
             this.nextButton.Size = new System.Drawing.Size(16, 17);
             this.nextButton.Text = "toolStripStatusLabel1";
-            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
+            this.nextButton.Click += new System.EventHandler(this.NextButtonClick);
             // 
             // logButton
             // 
@@ -120,7 +120,7 @@
             this.logButton.Name = "logButton";
             this.logButton.Size = new System.Drawing.Size(16, 17);
             this.logButton.Text = "log";
-            this.logButton.Click += new System.EventHandler(this.logButton_Click);
+            this.logButton.Click += new System.EventHandler(this.LogButtonClick);
             // 
             // statusLabel
             // 
@@ -141,7 +141,7 @@
             this.Controls.Add(this.webBrowser);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "miniwsForm";
+            this.Name = "MiniwsForm";
             this.Text = "miniwa";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
