@@ -25,7 +25,7 @@ namespace miniws
             ShowWindow(hWnd, 0);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new miniwsForm());
+            Application.Run(new MiniwsForm());
         }
     }
 }

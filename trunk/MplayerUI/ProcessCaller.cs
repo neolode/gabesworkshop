@@ -137,18 +137,18 @@ namespace mpui
         {
             // Start a new process for the cmd
             _process = new Process
-                           {
-                               StartInfo =
-                                   {
-                                       UseShellExecute = false,
-                                       RedirectStandardOutput = true,
-                                       RedirectStandardError = true,
-                                       CreateNoWindow = true,
-                                       FileName = FileName,
-                                       Arguments = Arguments,
-                                       WorkingDirectory = WorkingDirectory
-                                   }
-                           };
+                          {
+                              StartInfo =
+                                  {
+                                      UseShellExecute = false,
+                                      RedirectStandardOutput = true,
+                                      RedirectStandardError = true,
+                                      CreateNoWindow = true,
+                                      FileName = FileName,
+                                      Arguments = Arguments,
+                                      WorkingDirectory = WorkingDirectory
+                                  }
+                          };
             _process.Start();
 
             

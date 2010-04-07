@@ -1,23 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Diagnostics;
 
 namespace miniws
 {
-    public partial class miniwsForm : Form
+    public partial class MiniwsForm : Form
     {
-        private Uri ourUri;
+        private Uri _ourUri;
 
         private LogViewer logViewer;
         // Construction de la fenêtre principale
-        public miniwsForm()
+        public MiniwsForm()
         {
             logViewer = new LogViewer();
             ConsoleRedirector.attach(logViewer);
@@ -26,7 +18,7 @@ namespace miniws
             //mysqlProcess = null;
 
             // Pour l'instant on n'existe pas
-            this.Enabled = false;
+            Enabled = false;
             
             // Gooo !
             InitializeComponent();
@@ -47,7 +39,7 @@ namespace miniws
         // Gazzzzz ! Fait péter le browser !
         private void Form1_Load(object sender, EventArgs e)
         {
-            String UriStr = @"http://127.0.0.1";//miniws.Properties.Settings.Default.HomeUrl;
+            var uriStr = @"http://127.0.0.1";//miniws.Properties.Settings.Default.HomeUrl;
             int port;
 
             // On voit si on a un mysql à démarrer
@@ -68,12 +60,12 @@ namespace miniws
                 port = ZmwSimport.zmws_get_port();
                 if (port != 80)
                 {
-                    UriStr += ":" + port + "/";
+                    uriStr += ":" + port + "/";
                 }
-                ourUri = new Uri(UriStr);
+                _ourUri = new Uri(uriStr);
 
                 // Allons donc visiter la page d'accueil
-                webBrowser.Url = ourUri;
+                webBrowser.Url = _ourUri;
             }
             else
             {
@@ -82,8 +74,8 @@ namespace miniws
             }
 
             // On s'active
-            this.Enabled = true;
-            this.Visible = true;
+            Enabled = true;
+            Visible = true;
 
             // Ok, on n'a plus besoin du splash
             //splash.Close();
@@ -109,54 +101,54 @@ namespace miniws
         }
 
         // On a avancé un peu dans le chargement
-        private void webBrowser_ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
+        private void WebBrowserProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
         {
             statusProgressBar.Value = (int)(100 * e.CurrentProgress / e.MaximumProgress);
         }
 
         // Ca charge !
-        private void webBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private void WebBrowserNavigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             statusLabel.Text = "Zzzzzzzzzzzzzzzzzzzzzzz ...";
             statusProgressBar.Visible = true;
         }
 
         // On est arrivé
-        private void webBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        private void WebBrowserNavigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             // On récupère l'url courante
             statusLabel.Text = webBrowser.Url.ToString();
 
             // On récupère le titre du document
-            miniwsForm.ActiveForm.Text = "miniwa - " + webBrowser.DocumentTitle;
+            Text = "miniwa - " + webBrowser.DocumentTitle;
         }
 
         // Le document est totalement chargé
-        private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void WebBrowserDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             statusProgressBar.Value = 0;
             statusProgressBar.Visible = false;
         }
 
         // Revenir en arrière
-        private void backButton_Click(object sender, EventArgs e)
+        private void BackButtonClick(object sender, EventArgs e)
         {
             webBrowser.GoBack();
         }
 
         // Retour vers le futur
-        private void nextButton_Click(object sender, EventArgs e)
+        private void NextButtonClick(object sender, EventArgs e)
         {
             webBrowser.GoForward();
         }
 
         // localhost, sweet localhost :)
-        private void homeButton_Click(object sender, EventArgs e)
+        private void HomeButtonClick(object sender, EventArgs e)
         {
-            webBrowser.Url = ourUri;
+            webBrowser.Url = _ourUri;
         }
 
-        private void logButton_Click(object sender, EventArgs e)
+        private void LogButtonClick(object sender, EventArgs e)
         {
             logViewer.Visible = !logViewer.Visible;
         }
