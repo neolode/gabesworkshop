@@ -14,8 +14,7 @@ namespace miniws
     public partial class miniwsForm : Form
     {
         private Uri ourUri;
-        private Process mysqlProcess;
-        private Form splash;
+
         private LogViewer logViewer;
         // Construction de la fenêtre principale
         public miniwsForm()
