@@ -1,8 +1,7 @@
-namespace lightAspServer
-{
-    using System;
-    using System.EnterpriseServices.Internal;
+using System.EnterpriseServices.Internal;
 
+namespace lightAsp.Util
+{
     public static class GacUtil
     {
         public static void Install(string dll)

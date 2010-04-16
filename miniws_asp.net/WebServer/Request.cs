@@ -1,24 +1,28 @@
+using System;
+using System.Collections;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.Hosting;
+using Microsoft.Win32.SafeHandles;
+
 namespace lightAsp.WebServer
 {
-    using Microsoft.Win32.SafeHandles;
-    using System;
-    using System.Collections;
-    using System.Globalization;
-    using System.IO;
-    using System.Text;
-    using System.Web;
-    using System.Web.Hosting;
-
     internal class Request : SimpleWorkerRequest
     {
+        private const int MaxHeaderBytes = 0x8000;
+        private static readonly char[] SBadPathChars = new[] {'%', '>', '<', '$', ':'};
+        private static readonly string[] SDefaultFilenames = new[] {"default.aspx", "default.htm", "default.html"};
         private string _allRawHeaders;
         private Connection _conn;
         private int _contentLength;
         private bool _disallowRemoteConnections;
         private int _endHeadersOffset;
         private string _filePath;
-        private byte[] _headerBytes;
         private ArrayList _headerByteStrings;
+        private byte[] _headerBytes;
         private bool _headersSent;
         private Host _host;
         private string[] _knownRequestHeaders;
@@ -38,20 +42,18 @@ namespace lightAsp.WebServer
         private string[][] _unknownRequestHeaders;
         private string _url;
         private string _verb;
-        private const int maxHeaderBytes = 0x8000;
-        private static char[] s_badPathChars = new char[] { '%', '>', '<', '$', ':' };
-        private static string[] s_defaultFilenames = new string[] { "default.aspx", "default.htm", "default.html" };
 
-        public Request(Host host, Connection conn, bool disallowRemoteConnections) : base(string.Empty, string.Empty, null)
+        public Request(Host host, Connection conn, bool disallowRemoteConnections)
+            : base(string.Empty, string.Empty, null)
         {
-            this._host = host;
-            this._conn = conn;
-            this._disallowRemoteConnections = disallowRemoteConnections;
+            _host = host;
+            _conn = conn;
+            _disallowRemoteConnections = disallowRemoteConnections;
         }
 
         public override void CloseConnection()
         {
-            this._conn.Close();
+            _conn.Close();
         }
 
         public override void EndOfRequest()
@@ -60,96 +62,95 @@ namespace lightAsp.WebServer
 
         public override void FlushResponse(bool finalFlush)
         {
-            if (!this._headersSent)
+            if (!_headersSent)
             {
-                this._conn.WriteHeaders(this._responseStatus, this._responseHeadersBuilder.ToString());
-                this._headersSent = true;
+                _conn.WriteHeaders(_responseStatus, _responseHeadersBuilder.ToString());
+                _headersSent = true;
             }
-            for (int i = 0; i < this._responseBodyBytes.Count; i++)
+            foreach (byte[] data in _responseBodyBytes.Cast<byte[]>())
             {
-                byte[] data = (byte[]) this._responseBodyBytes[i];
-                this._conn.WriteBody(data, 0, data.Length);
+                _conn.WriteBody(data, 0, data.Length);
             }
-            this._responseBodyBytes = new ArrayList();
+            _responseBodyBytes = new ArrayList();
             if (finalFlush)
             {
-                this._conn.Close();
+                _conn.Close();
             }
         }
 
         public override string GetAppPath()
         {
-            return this._host.VirtualPath;
+            return _host.VirtualPath;
         }
 
         public override string GetAppPathTranslated()
         {
-            return this._host.PhysicalPath;
+            return _host.PhysicalPath;
         }
 
         public override string GetFilePath()
         {
-            return this._filePath;
+            return _filePath;
         }
 
         public override string GetFilePathTranslated()
         {
-            return this._pathTranslated;
+            return _pathTranslated;
         }
 
         public override string GetHttpVerbName()
         {
-            return this._verb;
+            return _verb;
         }
 
         public override string GetHttpVersion()
         {
-            return this._prot;
+            return _prot;
         }
 
         public override string GetKnownRequestHeader(int index)
         {
-            return this._knownRequestHeaders[index];
+            return _knownRequestHeaders[index];
         }
 
         public override string GetLocalAddress()
         {
-            return this._conn.LocalIP;
+            return _conn.LocalIp;
         }
 
         public override int GetLocalPort()
         {
-            return this._host.Port;
+            return _host.Port;
         }
 
         public override string GetPathInfo()
         {
-            return this._pathInfo;
+            return _pathInfo;
         }
 
         public override byte[] GetPreloadedEntityBody()
         {
-            return this._preloadedContent;
+            return _preloadedContent;
         }
 
         public override string GetQueryString()
         {
-            return this._queryString;
+            return _queryString;
         }
 
         public override byte[] GetQueryStringRawBytes()
         {
-            return this._queryStringBytes;
+            return _queryStringBytes;
         }
 
         public override string GetRawUrl()
         {
-            return this._url;
+            return _url;
         }
 
         public override string GetRemoteAddress()
         {
-            return this._conn.RemoteIP;
+            return _conn.RemoteIp;
         }
 
         public override int GetRemotePort()
@@ -165,7 +166,7 @@ namespace lightAsp.WebServer
             {
                 return str;
             }
-            if (!(str2 == "ALL_RAW"))
+            if (str2 != "ALL_RAW")
             {
                 if (str2 != "SERVER_PROTOCOL")
                 {
@@ -178,19 +179,19 @@ namespace lightAsp.WebServer
             }
             else
             {
-                return this._allRawHeaders;
+                return _allRawHeaders;
             }
-            return this._prot;
+            return _prot;
         }
 
         public override string GetUnknownRequestHeader(string name)
         {
-            int length = this._unknownRequestHeaders.Length;
+            int length = _unknownRequestHeaders.Length;
             for (int i = 0; i < length; i++)
             {
-                if (string.Compare(name, this._unknownRequestHeaders[i][0], true, CultureInfo.InvariantCulture) == 0)
+                if (string.Compare(name, _unknownRequestHeaders[i][0], true, CultureInfo.InvariantCulture) == 0)
                 {
-                    return this._unknownRequestHeaders[i][1];
+                    return _unknownRequestHeaders[i][1];
                 }
             }
             return null;
@@ -198,64 +199,57 @@ namespace lightAsp.WebServer
 
         public override string[][] GetUnknownRequestHeaders()
         {
-            return this._unknownRequestHeaders;
+            return _unknownRequestHeaders;
         }
 
         public override string GetUriPath()
         {
-            return this._path;
+            return _path;
         }
 
         public override bool HeadersSent()
         {
-            return this._headersSent;
+            return _headersSent;
         }
 
         private bool IsBadPath()
         {
-            return ((this._path == null) || ((this._path.IndexOfAny(s_badPathChars) >= 0) || (this._path.IndexOf("..") >= 0)));
+            return ((_path == null) || ((_path.IndexOfAny(SBadPathChars) >= 0) || (_path.IndexOf("..") >= 0)));
         }
 
         public override bool IsClientConnected()
         {
-            return this._conn.Connected;
+            return _conn.Connected;
         }
 
         public override bool IsEntireEntityBodyIsPreloaded()
         {
-            return (this._contentLength == this._preloadedContentLength);
+            return (_contentLength == _preloadedContentLength);
         }
 
         public override string MapPath(string path)
         {
             //map to phisical
-            string physicalPath = string.Empty;
-            if (((path == null) || (path.Length == 0)) || path.Equals("/"))
+            string physicalPath;
+            if (string.IsNullOrEmpty(path) || path.Equals("/"))
             {
-                if (this._host.VirtualPath == "/")
-                {
-                    physicalPath = this._host.PhysicalPath;
-                }
-                else
-                {
-                    physicalPath = Environment.SystemDirectory;
-                }
+                physicalPath = _host.VirtualPath == "/" ? _host.PhysicalPath : Environment.SystemDirectory;
             }
-            else if (this._host.IsVirtualPathAppPath(path))
+            else if (_host.IsVirtualPathAppPath(path))
             {
-                physicalPath = this._host.PhysicalPath;
+                physicalPath = _host.PhysicalPath;
             }
-            else if (this._host.IsVirtualPathInApp(path))
+            else if (_host.IsVirtualPathInApp(path))
             {
-                physicalPath = this._host.PhysicalPath + path.Substring(this._host.NormalizedVirtualPath.Length);
+                physicalPath = _host.PhysicalPath + path.Substring(_host.NormalizedVirtualPath.Length);
             }
             else if (path.StartsWith("/"))
             {
-                physicalPath = this._host.PhysicalPath + path.Substring(1);
+                physicalPath = _host.PhysicalPath + path.Substring(1);
             }
             else
             {
-                physicalPath = this._host.PhysicalPath + path;
+                physicalPath = _host.PhysicalPath + path;
             }
             physicalPath = physicalPath.Replace('/', '\\');
             if (physicalPath.EndsWith(@"\") && !physicalPath.EndsWith(@":\"))
@@ -267,20 +261,20 @@ namespace lightAsp.WebServer
 
         private void ParseHeaders()
         {
-            this._knownRequestHeaders = new string[40];
-            ArrayList list = new ArrayList();
-            for (int i = 1; i < this._headerByteStrings.Count; i++)
+            _knownRequestHeaders = new string[40];
+            var list = new ArrayList();
+            for (int i = 1; i < _headerByteStrings.Count; i++)
             {
-                string str = ((ByteString) this._headerByteStrings[i]).GetString();
+                string str = ((ByteString) _headerByteStrings[i]).GetString();
                 int index = str.IndexOf(':');
                 if (index >= 0)
                 {
                     string header = str.Substring(0, index).Trim();
                     string str3 = str.Substring(index + 1).Trim();
-                    int knownRequestHeaderIndex = HttpWorkerRequest.GetKnownRequestHeaderIndex(header);
+                    int knownRequestHeaderIndex = GetKnownRequestHeaderIndex(header);
                     if (knownRequestHeaderIndex >= 0)
                     {
-                        this._knownRequestHeaders[knownRequestHeaderIndex] = str3;
+                        _knownRequestHeaders[knownRequestHeaderIndex] = str3;
                     }
                     else
                     {
@@ -289,157 +283,145 @@ namespace lightAsp.WebServer
                     }
                 }
             }
-            int num4 = list.Count / 2;
-            this._unknownRequestHeaders = new string[num4][];
+            int num4 = list.Count/2;
+            _unknownRequestHeaders = new string[num4][];
             int num5 = 0;
             for (int j = 0; j < num4; j++)
             {
-                this._unknownRequestHeaders[j] = new string[] { (string) list[num5++], (string) list[num5++] };
+                _unknownRequestHeaders[j] = new[] {(string) list[num5++], (string) list[num5++]};
             }
-            if (this._headerByteStrings.Count > 1)
+            if (_headerByteStrings.Count > 1)
             {
-                this._allRawHeaders = Encoding.UTF8.GetString(this._headerBytes, this._startHeadersOffset, this._endHeadersOffset - this._startHeadersOffset);
+                _allRawHeaders = Encoding.UTF8.GetString(_headerBytes, _startHeadersOffset,
+                                                         _endHeadersOffset - _startHeadersOffset);
             }
             else
             {
-                this._allRawHeaders = string.Empty;
+                _allRawHeaders = string.Empty;
             }
         }
 
         private void ParsePostedContent()
         {
-            this._contentLength = 0;
-            this._preloadedContentLength = 0;
-            string s = this._knownRequestHeaders[11];
+            _contentLength = 0;
+            _preloadedContentLength = 0;
+            string s = _knownRequestHeaders[11];
             if (s != null)
             {
                 try
                 {
-                    this._contentLength = int.Parse(s);
+                    _contentLength = int.Parse(s);
                 }
                 catch
                 {
                 }
             }
-            if (this._headerBytes.Length > this._endHeadersOffset)
+            if (_headerBytes.Length > _endHeadersOffset)
             {
-                this._preloadedContentLength = this._headerBytes.Length - this._endHeadersOffset;
-                if ((this._preloadedContentLength > this._contentLength) && (this._contentLength > 0))
+                _preloadedContentLength = _headerBytes.Length - _endHeadersOffset;
+                if ((_preloadedContentLength > _contentLength) && (_contentLength > 0))
                 {
-                    this._preloadedContentLength = this._contentLength;
+                    _preloadedContentLength = _contentLength;
                 }
-                this._preloadedContent = new byte[this._preloadedContentLength];
-                Buffer.BlockCopy(this._headerBytes, this._endHeadersOffset, this._preloadedContent, 0, this._preloadedContentLength);
+                _preloadedContent = new byte[_preloadedContentLength];
+                Buffer.BlockCopy(_headerBytes, _endHeadersOffset, _preloadedContent, 0, _preloadedContentLength);
             }
         }
 
         private void ParseRequestLine()
         {
-            ByteString[] strArray = ((ByteString) this._headerByteStrings[0]).Split(' ');
+            ByteString[] strArray = ((ByteString) _headerByteStrings[0]).Split(' ');
             if (((strArray != null) && (strArray.Length >= 2)) && (strArray.Length <= 3))
             {
-                this._verb = strArray[0].GetString();
+                _verb = strArray[0].GetString();
                 ByteString str2 = strArray[1];
                 //virtual path here
-                this._url = str2.GetString();
-                if (strArray.Length == 3)
-                {
-                    this._prot = strArray[2].GetString();
-                }
-                else
-                {
-                    this._prot = "HTTP/1.0";
-                }
+                _url = str2.GetString();
+                _prot = strArray.Length == 3 ? strArray[2].GetString() : "HTTP/1.0";
                 int index = str2.IndexOf('?');
+                _queryStringBytes = index > 0 ? str2.Substring(index + 1).GetBytes() : new byte[0];
+                index = _url.IndexOf('?');
                 if (index > 0)
                 {
-                    this._queryStringBytes = str2.Substring(index + 1).GetBytes();
+                    _path = _url.Substring(0, index);
+                    _queryString = _url.Substring(index + 1);
                 }
                 else
                 {
-                    this._queryStringBytes = new byte[0];
+                    _path = _url;
+                    _queryStringBytes = new byte[0];
                 }
-                index = this._url.IndexOf('?');
-                if (index > 0)
+                if (_path.IndexOf('%') >= 0)
                 {
-                    this._path = this._url.Substring(0, index);
-                    this._queryString = this._url.Substring(index + 1);
+                    _path = HttpUtility.UrlDecode(_path);
                 }
-                else
-                {
-                    this._path = this._url;
-                    this._queryStringBytes = new byte[0];
-                }
-                if (this._path.IndexOf('%') >= 0)
-                {
-                    this._path = HttpUtility.UrlDecode(this._path);
-                }
-                int startIndex = this._path.LastIndexOf('.');
-                int num3 = this._path.LastIndexOf('/');
+                int startIndex = _path.LastIndexOf('.');
+                int num3 = _path.LastIndexOf('/');
                 if (((startIndex >= 0) && (num3 >= 0)) && (startIndex < num3))
                 {
-                    int length = this._path.IndexOf('/', startIndex);
-                    this._filePath = this._path.Substring(0, length);
-                    this._pathInfo = this._path.Substring(length);
+                    int length = _path.IndexOf('/', startIndex);
+                    _filePath = _path.Substring(0, length);
+                    _pathInfo = _path.Substring(length);
                 }
                 else
                 {
-                    this._filePath = this._path;
-                    this._pathInfo = string.Empty;
+                    _filePath = _path;
+                    _pathInfo = string.Empty;
                 }
-                this._pathTranslated = this.MapPath(this._filePath);
+                _pathTranslated = MapPath(_filePath);
             }
         }
 
         private void PrepareResponse()
         {
-            this._headersSent = false;
-            this._responseStatus = 200;
-            this._responseHeadersBuilder = new StringBuilder();
-            this._responseBodyBytes = new ArrayList();
+            _headersSent = false;
+            _responseStatus = 200;
+            _responseHeadersBuilder = new StringBuilder();
+            _responseBodyBytes = new ArrayList();
         }
 
         public void Process()
         {
-            this.ReadAllHeaders();
-            if (((this._headerBytes == null) || (this._endHeadersOffset < 0)) || ((this._headerByteStrings == null) || (this._headerByteStrings.Count == 0)))
+            ReadAllHeaders();
+            if (((_headerBytes == null) || (_endHeadersOffset < 0)) ||
+                ((_headerByteStrings == null) || (_headerByteStrings.Count == 0)))
             {
-                this._conn.WriteErrorAndClose(400);
+                _conn.WriteErrorAndClose(400);
             }
             else
             {
-                this.ParseRequestLine();
-                if (this.IsBadPath())
+                ParseRequestLine();
+                if (IsBadPath())
                 {
-                    this._conn.WriteErrorAndClose(400);
+                    _conn.WriteErrorAndClose(400);
                 }
-                else if (!this._conn.IsLocal && this._disallowRemoteConnections)
+                else if (!_conn.IsLocal && _disallowRemoteConnections)
                 {
-                    this._conn.WriteErrorAndClose(0x193);
+                    _conn.WriteErrorAndClose(0x193);
                 }
                 else
                 {
-                    bool isClientScriptPath = false;
-                    string clientScript = null;
-                    if (!this._host.IsVirtualPathInApp(this._path, out isClientScriptPath, out clientScript))
+                    bool isClientScriptPath;
+                    string clientScript;
+                    if (!_host.IsVirtualPathInApp(_path, out isClientScriptPath, out clientScript))
                     {
-                        this._conn.WriteErrorAndClose(0x194);
+                        _conn.WriteErrorAndClose(0x194);
                     }
                     else
                     {
-                        this.ParseHeaders();
-                        this.ParsePostedContent();
-                        if (((this._verb == "POST") && (this._contentLength > 0)) && (this._preloadedContentLength < this._contentLength))
+                        ParseHeaders();
+                        ParsePostedContent();
+                        if (((_verb == "POST") && (_contentLength > 0)) && (_preloadedContentLength < _contentLength))
                         {
-                            this._conn.Write100Continue();
+                            _conn.Write100Continue();
                         }
                         if (isClientScriptPath)
                         {
-                            this._conn.WriteEntireResponseFromFile(this._host.PhysicalClientScriptPath + clientScript, false);
+                            _conn.WriteEntireResponseFromFile(_host.PhysicalClientScriptPath + clientScript, false);
                         }
-                        else if (!this.ProcessDirectoryListingRequest())
+                        else if (!ProcessDirectoryListingRequest())
                         {
-                            this.PrepareResponse();
+                            PrepareResponse();
                             HttpRuntime.ProcessRequest(this);
                         }
                     }
@@ -449,78 +431,79 @@ namespace lightAsp.WebServer
 
         private bool ProcessDirectoryListingRequest()
         {
-            if (this._verb != "GET")
+            if (_verb != "GET")
             {
                 return false;
             }
-            int startIndex = this._pathTranslated.LastIndexOf('\\');
-            if (this._pathTranslated.IndexOf('.', startIndex) >= startIndex)
+            int startIndex = _pathTranslated.LastIndexOf('\\');
+            if (_pathTranslated.IndexOf('.', startIndex) >= startIndex)
             {
                 return false;
             }
-            if (!Directory.Exists(this._pathTranslated))
+            if (!Directory.Exists(_pathTranslated))
             {
                 return false;
             }
-            if (!this._path.EndsWith("/"))
+            if (!_path.EndsWith("/"))
             {
-                string str = this._path + "/";
+                string str = _path + "/";
                 string extraHeaders = "Location: " + str + "\r\n";
-                string body = "<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href='" + str + "'>here</a>.</h2>\r\n</body></html>\r\n";
-                this._conn.WriteEntireResponseFromString(0x12e, extraHeaders, body, false);
+                string body = "<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href='" +
+                              str + "'>here</a>.</h2>\r\n</body></html>\r\n";
+                _conn.WriteEntireResponseFromString(0x12e, extraHeaders, body, false);
                 return true;
             }
-            foreach (string str4 in s_defaultFilenames)
+            foreach (string str4 in SDefaultFilenames)
             {
-                string str5 = this._pathTranslated + @"\" + str4;
+                string str5 = _pathTranslated + @"\" + str4;
                 if (File.Exists(str5))
                 {
-                    this._path = this._path + str4;
-                    this._filePath = this._path;
-                    this._url = (this._queryString != null) ? (this._path + "?" + this._queryString) : this._path;
-                    this._pathTranslated = str5;
+                    _path = _path + str4;
+                    _filePath = _path;
+                    _url = (_queryString != null) ? (_path + "?" + _queryString) : _path;
+                    _pathTranslated = str5;
                     return false;
                 }
             }
             FileSystemInfo[] elements = null;
             try
             {
-                elements = new DirectoryInfo(this._pathTranslated).GetFileSystemInfos();
+                elements = new DirectoryInfo(_pathTranslated).GetFileSystemInfos();
             }
             catch
             {
             }
             string path = null;
-            if (this._path.Length > 1)
+            if (_path.Length > 1)
             {
-                int length = this._path.LastIndexOf('/', this._path.Length - 2);
-                path = (length > 0) ? this._path.Substring(0, length) : "/";
-                if (!this._host.IsVirtualPathInApp(path))
+                int length = _path.LastIndexOf('/', _path.Length - 2);
+                path = (length > 0) ? _path.Substring(0, length) : "/";
+                if (!_host.IsVirtualPathInApp(path))
                 {
                     path = null;
                 }
             }
-            this._conn.WriteEntireResponseFromString(200, "Content-type: text/html; charset=utf-8\r\n", Messages.FormatDirectoryListing(this._path, path, elements), false);
+            _conn.WriteEntireResponseFromString(200, "Content-type: text/html; charset=utf-8\r\n",
+                                                Messages.FormatDirectoryListing(_path, path, elements), false);
             return true;
         }
 
         private void ReadAllHeaders()
         {
-            this._headerBytes = null;
+            _headerBytes = null;
             do
             {
-                if (!this.TryReadAllHeaders())
+                if (!TryReadAllHeaders())
                 {
                     return;
                 }
-            }
-            while (this._endHeadersOffset < 0);
+            } while (_endHeadersOffset < 0);
         }
 
         public override int ReadEntityBody(byte[] buffer, int size)
         {
             int count = 0;
-            byte[] src = this._conn.ReadRequestBytes(size);
+            byte[] src = _conn.ReadRequestBytes(size);
             if ((src != null) && (src.Length > 0))
             {
                 count = src.Length;
@@ -531,17 +514,17 @@ namespace lightAsp.WebServer
 
         public override void SendCalculatedContentLength(int contentLength)
         {
-            if (!this._headersSent)
+            if (!_headersSent)
             {
-                this._responseHeadersBuilder.Append("Content-Length: ");
-                this._responseHeadersBuilder.Append(contentLength.ToString());
-                this._responseHeadersBuilder.Append("\r\n");
+                _responseHeadersBuilder.Append("Content-Length: ");
+                _responseHeadersBuilder.Append(contentLength.ToString());
+                _responseHeadersBuilder.Append("\r\n");
             }
         }
 
         public override void SendKnownResponseHeader(int index, string value)
         {
-            if (!this._headersSent)
+            if (!_headersSent)
             {
                 switch (index)
                 {
@@ -552,24 +535,24 @@ namespace lightAsp.WebServer
 
                     case 0x12:
                     case 0x13:
-                        if (!this._specialCaseStaticFileHeaders)
+                        if (!_specialCaseStaticFileHeaders)
                         {
                             break;
                         }
                         return;
 
                     case 20:
-                        if (!(value == "bytes"))
+                        if (value != "bytes")
                         {
                             break;
                         }
-                        this._specialCaseStaticFileHeaders = true;
+                        _specialCaseStaticFileHeaders = true;
                         return;
                 }
-                this._responseHeadersBuilder.Append(HttpWorkerRequest.GetKnownResponseHeaderName(index));
-                this._responseHeadersBuilder.Append(": ");
-                this._responseHeadersBuilder.Append(value);
-                this._responseHeadersBuilder.Append("\r\n");
+                _responseHeadersBuilder.Append(GetKnownResponseHeaderName(index));
+                _responseHeadersBuilder.Append(": ");
+                _responseHeadersBuilder.Append(value);
+                _responseHeadersBuilder.Append("\r\n");
             }
         }
 
@@ -581,7 +564,7 @@ namespace lightAsp.WebServer
                 try
                 {
                     f = new FileStream(new SafeFileHandle(handle, false), FileAccess.Read);
-                    this.SendResponseFromFileStream(f, offset, length);
+                    SendResponseFromFileStream(f, offset, length);
                 }
                 finally
                 {
@@ -601,7 +584,7 @@ namespace lightAsp.WebServer
                 try
                 {
                     f = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    this.SendResponseFromFileStream(f, offset, length);
+                    SendResponseFromFileStream(f, offset, length);
                 }
                 finally
                 {
@@ -628,23 +611,23 @@ namespace lightAsp.WebServer
                 }
                 if (length <= 0x10000L)
                 {
-                    byte[] buffer = new byte[(int) length];
+                    var buffer = new byte[(int) length];
                     int num2 = f.Read(buffer, 0, (int) length);
-                    this.SendResponseFromMemory(buffer, num2);
+                    SendResponseFromMemory(buffer, num2);
                 }
                 else
                 {
-                    byte[] buffer2 = new byte[0x10000];
-                    int num3 = (int) length;
+                    var buffer2 = new byte[0x10000];
+                    var num3 = (int) length;
                     while (num3 > 0)
                     {
                         int count = (num3 < 0x10000) ? num3 : 0x10000;
                         int num5 = f.Read(buffer2, 0, count);
-                        this.SendResponseFromMemory(buffer2, num5);
+                        SendResponseFromMemory(buffer2, num5);
                         num3 -= num5;
                         if ((num3 > 0) && (num5 > 0))
                         {
-                            this.FlushResponse(false);
+                            FlushResponse(false);
                         }
                     }
                 }
@@ -655,55 +638,55 @@ namespace lightAsp.WebServer
         {
             if (length > 0)
             {
-                byte[] dst = new byte[length];
+                var dst = new byte[length];
                 Buffer.BlockCopy(data, 0, dst, 0, length);
-                this._responseBodyBytes.Add(dst);
+                _responseBodyBytes.Add(dst);
             }
         }
 
         public override void SendStatus(int statusCode, string statusDescription)
         {
-            this._responseStatus = statusCode;
+            _responseStatus = statusCode;
         }
 
         public override void SendUnknownResponseHeader(string name, string value)
         {
-            if (!this._headersSent)
+            if (!_headersSent)
             {
-                this._responseHeadersBuilder.Append(name);
-                this._responseHeadersBuilder.Append(": ");
-                this._responseHeadersBuilder.Append(value);
-                this._responseHeadersBuilder.Append("\r\n");
+                _responseHeadersBuilder.Append(name);
+                _responseHeadersBuilder.Append(": ");
+                _responseHeadersBuilder.Append(value);
+                _responseHeadersBuilder.Append("\r\n");
             }
         }
 
         private bool TryReadAllHeaders()
         {
-            byte[] src = this._conn.ReadRequestBytes(0x8000);
+            byte[] src = _conn.ReadRequestBytes(0x8000);
             if ((src == null) || (src.Length == 0))
             {
                 return false;
             }
-            if (this._headerBytes != null)
+            if (_headerBytes != null)
             {
-                int num = src.Length + this._headerBytes.Length;
+                int num = src.Length + _headerBytes.Length;
                 if (num > 0x8000)
                 {
                     return false;
                 }
-                byte[] dst = new byte[num];
-                Buffer.BlockCopy(this._headerBytes, 0, dst, 0, this._headerBytes.Length);
-                Buffer.BlockCopy(src, 0, dst, this._headerBytes.Length, src.Length);
-                this._headerBytes = dst;
+                var dst = new byte[num];
+                Buffer.BlockCopy(_headerBytes, 0, dst, 0, _headerBytes.Length);
+                Buffer.BlockCopy(src, 0, dst, _headerBytes.Length, src.Length);
+                _headerBytes = dst;
             }
             else
             {
-                this._headerBytes = src;
+                _headerBytes = src;
             }
-            this._startHeadersOffset = -1;
-            this._endHeadersOffset = -1;
-            this._headerByteStrings = new ArrayList();
-            ByteParser parser = new ByteParser(this._headerBytes);
+            _startHeadersOffset = -1;
+            _endHeadersOffset = -1;
+            _headerByteStrings = new ArrayList();
+            var parser = new ByteParser(_headerBytes);
             while (true)
             {
                 ByteString str = parser.ReadLine();
@@ -711,19 +694,18 @@ namespace lightAsp.WebServer
                 {
                     break;
                 }
-                if (this._startHeadersOffset < 0)
+                if (_startHeadersOffset < 0)
                 {
-                    this._startHeadersOffset = parser.CurrentOffset;
+                    _startHeadersOffset = parser.CurrentOffset;
                 }
                 if (str.IsEmpty)
                 {
-                    this._endHeadersOffset = parser.CurrentOffset;
+                    _endHeadersOffset = parser.CurrentOffset;
                     break;
                 }
-                this._headerByteStrings.Add(str);
+                _headerByteStrings.Add(str);
             }
             return true;
         }
     }
 }
-

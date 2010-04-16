@@ -1,14 +1,15 @@
-namespace lightAsp.App
-{
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.IO;
-    using System.Windows.Forms;
-    using lightAsp.WebServer;
-    using lightAspServer;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using lightAsp.Properties;
+using lightAsp.Util;
+using lightAsp.WebServer;
 
+namespace lightAsp.Desktop
+{
     public class FrmMain : Form
     {
         private bool autostart;
@@ -48,492 +49,494 @@ namespace lightAsp.App
         {
             this.autostart = autostart;
             this.open = open;
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        private void btnBrowse_Click(object sender, EventArgs e)
+        private void BtnBrowseClick(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "Select the Directory to serve";
-            if (Directory.Exists(this.txtPhisicalDirectory.Text))
+            var dialog = new FolderBrowserDialog();
+            dialog.Description = @"Select the Directory to serve";
+            if (Directory.Exists(txtPhisicalDirectory.Text))
             {
-                dialog.SelectedPath = this.txtPhisicalDirectory.Text;
+                dialog.SelectedPath = txtPhisicalDirectory.Text;
             }
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                this.txtPhisicalDirectory.Text = dialog.SelectedPath;
+                txtPhisicalDirectory.Text = dialog.SelectedPath;
             }
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void BtnOkClick(object sender, EventArgs e)
         {
             base.Close();
         }
 
-        private void btnShutdown_Click(object sender, EventArgs e)
+        private void BtnShutdownClick(object sender, EventArgs e)
         {
-            this.Stop();
-            this.closing = true;
+            Stop();
+            closing = true;
             base.Close();
         }
 
-        private void btnStartStop_Click(object sender, EventArgs e)
+        private void BtnStartStopClick(object sender, EventArgs e)
         {
-            this.SwitchStatus();
+            SwitchStatus();
         }
 
-        private void chkStartServerAtLogin_CheckedChanged(object sender, EventArgs e)
+        private void ChkStartServerAtLoginCheckedChanged(object sender, EventArgs e)
         {
-            AutoStart.SetAutostart(this.chkStartServerAtLogin.Checked);
+            AutoStart.SetAutostart(chkStartServerAtLogin.Checked);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (this.components != null))
+            if (disposing && (components != null))
             {
-                this.components.Dispose();
+                components.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private void EditWebConfig()
         {
-            if (File.Exists(this.txtPhisicalDirectory.Text + @"\Web.config"))
+            if (File.Exists(txtPhisicalDirectory.Text + @"\Web.config"))
             {
-                Process.Start("notepad.exe", "\"" + this.txtPhisicalDirectory.Text + "\\Web.config\"");
+                Process.Start("notepad.exe", "\"" + txtPhisicalDirectory.Text + "\\Web.config\"");
             }
             else
             {
-                MessageBox.Show("The file Web.config was not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(@"The file Web.config was not found.", "Error", MessageBoxButtons.OK,
+                                MessageBoxIcon.Hand);
             }
         }
 
         private void FrmMain_Closing(object sender, CancelEventArgs e)
         {
-            if (!this.closing)
+            if (!closing)
             {
                 e.Cancel = true;
-                this.HideWindow();
+                HideWindow();
             }
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            base.Closing += new CancelEventHandler(this.FrmMain_Closing);
+            Closing += FrmMain_Closing;
             //this.notifyIcon.Icon = Resources.WikiSmallGray;
-            this.LoadSettings();
-            if (this.autostart)
+            LoadSettings();
+            if (autostart)
             {
-                this.HideWindow();
-                this.Start();
-                this.HideWindow();
-                if (this.open)
+                HideWindow();
+                Start();
+                HideWindow();
+                if (open)
                 {
-                    this.lnkWiki_LinkClicked(this, null);
+                    LnkWikiLinkClicked(this, null);
                 }
             }
         }
 
         private void HideWindow()
         {
-            Point location = base.Location;
-            base.Location = new Point(-1000, -1000);
-            base.ShowInTaskbar = false;
-            base.Hide();
-            base.Location = location;
+            Point location = Location;
+            Location = new Point(-1000, -1000);
+            ShowInTaskbar = false;
+            Hide();
+            Location = location;
         }
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.itmSep00 = new System.Windows.Forms.ToolStripSeparator();
-            this.itmSep01 = new System.Windows.Forms.ToolStripSeparator();
-            this.itmShutdown = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblPhisicalDirectory = new System.Windows.Forms.Label();
-            this.txtPhisicalDirectory = new System.Windows.Forms.TextBox();
-            this.chkDisallowRemoteConnections = new System.Windows.Forms.CheckBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
-            this.lblVirtualDirectory = new System.Windows.Forms.Label();
-            this.txtVirtualDirectory = new System.Windows.Forms.TextBox();
-            this.lblPort = new System.Windows.Forms.Label();
-            this.txtPort = new System.Windows.Forms.TextBox();
-            this.btnStartStop = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnShutdown = new System.Windows.Forms.Button();
-            this.lblSeparatorH = new System.Windows.Forms.Label();
-            this.lblLink = new System.Windows.Forms.Label();
-            this.lnkWiki = new System.Windows.Forms.LinkLabel();
-            this.chkStartServerAtLogin = new System.Windows.Forms.CheckBox();
-            this.lnkEditWebConfig = new System.Windows.Forms.LinkLabel();
-            this.itmOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.itmEditWebConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.itmSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.itmAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.itmStartStop = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            var resources = new ComponentResourceManager(typeof (FrmMain));
+            notifyIcon = new NotifyIcon(components);
+            contextMenuStrip = new ContextMenuStrip(components);
+            itmSep00 = new ToolStripSeparator();
+            itmSep01 = new ToolStripSeparator();
+            itmShutdown = new ToolStripMenuItem();
+            lblPhisicalDirectory = new Label();
+            txtPhisicalDirectory = new TextBox();
+            chkDisallowRemoteConnections = new CheckBox();
+            btnBrowse = new Button();
+            lblVirtualDirectory = new Label();
+            txtVirtualDirectory = new TextBox();
+            lblPort = new Label();
+            txtPort = new TextBox();
+            btnStartStop = new Button();
+            btnOK = new Button();
+            btnShutdown = new Button();
+            lblSeparatorH = new Label();
+            lblLink = new Label();
+            lnkWiki = new LinkLabel();
+            chkStartServerAtLogin = new CheckBox();
+            lnkEditWebConfig = new LinkLabel();
+            itmOpen = new ToolStripMenuItem();
+            itmEditWebConfig = new ToolStripMenuItem();
+            itmSettings = new ToolStripMenuItem();
+            itmAbout = new ToolStripMenuItem();
+            itmStartStop = new ToolStripMenuItem();
+            contextMenuStrip.SuspendLayout();
+            SuspendLayout();
             // 
             // notifyIcon
             // 
-            this.notifyIcon.ContextMenuStrip = this.contextMenuStrip;
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "ASP.net Light Server";
-            this.notifyIcon.Visible = true;
-            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
+            notifyIcon.ContextMenuStrip = contextMenuStrip;
+            notifyIcon.Icon = ((Icon) (resources.GetObject("notifyIcon.Icon")));
+            notifyIcon.Text = "ASP.net Light Server";
+            notifyIcon.Visible = true;
+            notifyIcon.DoubleClick += NotifyIconDoubleClick;
             // 
             // contextMenuStrip
             // 
-            this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.itmOpen,
-            this.itmSep00,
-            this.itmEditWebConfig,
-            this.itmSettings,
-            this.itmAbout,
-            this.itmSep01,
-            this.itmStartStop,
-            this.itmShutdown});
-            this.contextMenuStrip.Name = "contextMenuStrip1";
-            this.contextMenuStrip.Size = new System.Drawing.Size(182, 266);
+            contextMenuStrip.ImageScalingSize = new Size(32, 32);
+            contextMenuStrip.Items.AddRange(new ToolStripItem[]
+                                                {
+                                                    itmOpen,
+                                                    itmSep00,
+                                                    itmEditWebConfig,
+                                                    itmSettings,
+                                                    itmAbout,
+                                                    itmSep01,
+                                                    itmStartStop,
+                                                    itmShutdown
+                                                });
+            contextMenuStrip.Name = "contextMenuStrip";
+            contextMenuStrip.Size = new Size(182, 266);
             // 
             // itmSep00
             // 
-            this.itmSep00.Name = "itmSep00";
-            this.itmSep00.Size = new System.Drawing.Size(178, 6);
+            itmSep00.Name = "itmSep00";
+            itmSep00.Size = new Size(178, 6);
             // 
             // itmSep01
             // 
-            this.itmSep01.Name = "itmSep01";
-            this.itmSep01.Size = new System.Drawing.Size(178, 6);
+            itmSep01.Name = "itmSep01";
+            itmSep01.Size = new Size(178, 6);
             // 
             // itmShutdown
             // 
-            this.itmShutdown.Image = global::lightAsp.Properties.Resources.exit;
-            this.itmShutdown.Name = "itmShutdown";
-            this.itmShutdown.Size = new System.Drawing.Size(181, 38);
-            this.itmShutdown.Text = "Shutdown Server";
-            this.itmShutdown.Click += new System.EventHandler(this.itmExit_Click);
+            itmShutdown.Image = Resources.exit;
+            itmShutdown.Name = "itmShutdown";
+            itmShutdown.Size = new Size(181, 38);
+            itmShutdown.Text = "Shutdown Server";
+            itmShutdown.Click += ItmExitClick;
             // 
             // lblPhisicalDirectory
             // 
-            this.lblPhisicalDirectory.AutoSize = true;
-            this.lblPhisicalDirectory.Location = new System.Drawing.Point(12, 9);
-            this.lblPhisicalDirectory.Name = "lblPhisicalDirectory";
-            this.lblPhisicalDirectory.Size = new System.Drawing.Size(91, 13);
-            this.lblPhisicalDirectory.TabIndex = 1;
-            this.lblPhisicalDirectory.Text = "Physical Directory";
+            lblPhisicalDirectory.AutoSize = true;
+            lblPhisicalDirectory.Location = new Point(12, 9);
+            lblPhisicalDirectory.Name = "lblPhisicalDirectory";
+            lblPhisicalDirectory.Size = new Size(91, 13);
+            lblPhisicalDirectory.TabIndex = 1;
+            lblPhisicalDirectory.Text = "Physical Directory";
             // 
             // txtPhisicalDirectory
             // 
-            this.txtPhisicalDirectory.Location = new System.Drawing.Point(12, 25);
-            this.txtPhisicalDirectory.Name = "txtPhisicalDirectory";
-            this.txtPhisicalDirectory.Size = new System.Drawing.Size(250, 20);
-            this.txtPhisicalDirectory.TabIndex = 0;
+            txtPhisicalDirectory.Location = new Point(12, 25);
+            txtPhisicalDirectory.Name = "txtPhisicalDirectory";
+            txtPhisicalDirectory.Size = new Size(250, 20);
+            txtPhisicalDirectory.TabIndex = 0;
             // 
             // chkDisallowRemoteConnections
             // 
-            this.chkDisallowRemoteConnections.AutoSize = true;
-            this.chkDisallowRemoteConnections.Location = new System.Drawing.Point(12, 108);
-            this.chkDisallowRemoteConnections.Name = "chkDisallowRemoteConnections";
-            this.chkDisallowRemoteConnections.Size = new System.Drawing.Size(167, 17);
-            this.chkDisallowRemoteConnections.TabIndex = 4;
-            this.chkDisallowRemoteConnections.Text = "Disallow Remote Connections";
-            this.chkDisallowRemoteConnections.UseVisualStyleBackColor = true;
+            chkDisallowRemoteConnections.AutoSize = true;
+            chkDisallowRemoteConnections.Location = new Point(12, 108);
+            chkDisallowRemoteConnections.Name = "chkDisallowRemoteConnections";
+            chkDisallowRemoteConnections.Size = new Size(167, 17);
+            chkDisallowRemoteConnections.TabIndex = 4;
+            chkDisallowRemoteConnections.Text = "Disallow Remote Connections";
+            chkDisallowRemoteConnections.UseVisualStyleBackColor = true;
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(268, 23);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(60, 23);
-            this.btnBrowse.TabIndex = 1;
-            this.btnBrowse.Text = "Browse";
-            this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            btnBrowse.Location = new Point(268, 23);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(60, 23);
+            btnBrowse.TabIndex = 1;
+            btnBrowse.Text = "Browse";
+            btnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Click += BtnBrowseClick;
             // 
             // lblVirtualDirectory
             // 
-            this.lblVirtualDirectory.AutoSize = true;
-            this.lblVirtualDirectory.Location = new System.Drawing.Point(12, 57);
-            this.lblVirtualDirectory.Name = "lblVirtualDirectory";
-            this.lblVirtualDirectory.Size = new System.Drawing.Size(81, 13);
-            this.lblVirtualDirectory.TabIndex = 5;
-            this.lblVirtualDirectory.Text = "Virtual Directory";
+            lblVirtualDirectory.AutoSize = true;
+            lblVirtualDirectory.Location = new Point(12, 57);
+            lblVirtualDirectory.Name = "lblVirtualDirectory";
+            lblVirtualDirectory.Size = new Size(81, 13);
+            lblVirtualDirectory.TabIndex = 5;
+            lblVirtualDirectory.Text = "Virtual Directory";
             // 
             // txtVirtualDirectory
             // 
-            this.txtVirtualDirectory.Location = new System.Drawing.Point(12, 73);
-            this.txtVirtualDirectory.Name = "txtVirtualDirectory";
-            this.txtVirtualDirectory.Size = new System.Drawing.Size(250, 20);
-            this.txtVirtualDirectory.TabIndex = 2;
-            this.txtVirtualDirectory.Text = "/";
+            txtVirtualDirectory.Location = new Point(12, 73);
+            txtVirtualDirectory.Name = "txtVirtualDirectory";
+            txtVirtualDirectory.Size = new Size(250, 20);
+            txtVirtualDirectory.TabIndex = 2;
+            txtVirtualDirectory.Text = "/";
             // 
             // lblPort
             // 
-            this.lblPort.AutoSize = true;
-            this.lblPort.Location = new System.Drawing.Point(268, 57);
-            this.lblPort.Name = "lblPort";
-            this.lblPort.Size = new System.Drawing.Size(26, 13);
-            this.lblPort.TabIndex = 7;
-            this.lblPort.Text = "Port";
+            lblPort.AutoSize = true;
+            lblPort.Location = new Point(268, 57);
+            lblPort.Name = "lblPort";
+            lblPort.Size = new Size(26, 13);
+            lblPort.TabIndex = 7;
+            lblPort.Text = "Port";
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(268, 73);
-            this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(60, 20);
-            this.txtPort.TabIndex = 3;
-            this.txtPort.Text = "8080";
+            txtPort.Location = new Point(268, 73);
+            txtPort.Name = "txtPort";
+            txtPort.Size = new Size(60, 20);
+            txtPort.TabIndex = 3;
+            txtPort.Text = "8080";
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(12, 202);
-            this.btnStartStop.Name = "btnStartStop";
-            this.btnStartStop.Size = new System.Drawing.Size(75, 23);
-            this.btnStartStop.TabIndex = 5;
-            this.btnStartStop.Text = "Start";
-            this.btnStartStop.UseVisualStyleBackColor = true;
-            this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
+            btnStartStop.Location = new Point(12, 202);
+            btnStartStop.Name = "btnStartStop";
+            btnStartStop.Size = new Size(75, 23);
+            btnStartStop.TabIndex = 5;
+            btnStartStop.Text = "Start";
+            btnStartStop.UseVisualStyleBackColor = true;
+            btnStartStop.Click += BtnStartStopClick;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(253, 202);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 7;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            btnOK.Location = new Point(253, 202);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new Size(75, 23);
+            btnOK.TabIndex = 7;
+            btnOK.Text = "OK";
+            btnOK.UseVisualStyleBackColor = true;
+            btnOK.Click += BtnOkClick;
             // 
             // btnShutdown
             // 
-            this.btnShutdown.Location = new System.Drawing.Point(93, 202);
-            this.btnShutdown.Name = "btnShutdown";
-            this.btnShutdown.Size = new System.Drawing.Size(75, 23);
-            this.btnShutdown.TabIndex = 6;
-            this.btnShutdown.Text = "Shutdown";
-            this.btnShutdown.UseVisualStyleBackColor = true;
-            this.btnShutdown.Click += new System.EventHandler(this.btnShutdown_Click);
+            btnShutdown.Location = new Point(93, 202);
+            btnShutdown.Name = "btnShutdown";
+            btnShutdown.Size = new Size(75, 23);
+            btnShutdown.TabIndex = 6;
+            btnShutdown.Text = "Shutdown";
+            btnShutdown.UseVisualStyleBackColor = true;
+            btnShutdown.Click += BtnShutdownClick;
             // 
             // lblSeparatorH
             // 
-            this.lblSeparatorH.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblSeparatorH.Location = new System.Drawing.Point(0, 162);
-            this.lblSeparatorH.Name = "lblSeparatorH";
-            this.lblSeparatorH.Size = new System.Drawing.Size(342, 2);
-            this.lblSeparatorH.TabIndex = 12;
+            lblSeparatorH.BorderStyle = BorderStyle.Fixed3D;
+            lblSeparatorH.Location = new Point(0, 162);
+            lblSeparatorH.Name = "lblSeparatorH";
+            lblSeparatorH.Size = new Size(342, 2);
+            lblSeparatorH.TabIndex = 12;
             // 
             // lblLink
             // 
-            this.lblLink.AutoSize = true;
-            this.lblLink.Location = new System.Drawing.Point(12, 138);
-            this.lblLink.Name = "lblLink";
-            this.lblLink.Size = new System.Drawing.Size(30, 13);
-            this.lblLink.TabIndex = 13;
-            this.lblLink.Text = "Link:";
+            lblLink.AutoSize = true;
+            lblLink.Location = new Point(12, 138);
+            lblLink.Name = "lblLink";
+            lblLink.Size = new Size(30, 13);
+            lblLink.TabIndex = 13;
+            lblLink.Text = "Link:";
             // 
             // lnkWiki
             // 
-            this.lnkWiki.AutoSize = true;
-            this.lnkWiki.Enabled = false;
-            this.lnkWiki.Location = new System.Drawing.Point(45, 138);
-            this.lnkWiki.Name = "lnkWiki";
-            this.lnkWiki.Size = new System.Drawing.Size(33, 13);
-            this.lnkWiki.TabIndex = 14;
-            this.lnkWiki.TabStop = true;
-            this.lnkWiki.Text = "None";
-            this.lnkWiki.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkWiki_LinkClicked);
+            lnkWiki.AutoSize = true;
+            lnkWiki.Enabled = false;
+            lnkWiki.Location = new Point(45, 138);
+            lnkWiki.Name = "lnkWiki";
+            lnkWiki.Size = new Size(33, 13);
+            lnkWiki.TabIndex = 14;
+            lnkWiki.TabStop = true;
+            lnkWiki.Text = "None";
+            lnkWiki.LinkClicked += LnkWikiLinkClicked;
             // 
             // chkStartServerAtLogin
             // 
-            this.chkStartServerAtLogin.AutoSize = true;
-            this.chkStartServerAtLogin.Location = new System.Drawing.Point(12, 176);
-            this.chkStartServerAtLogin.Name = "chkStartServerAtLogin";
-            this.chkStartServerAtLogin.Size = new System.Drawing.Size(123, 17);
-            this.chkStartServerAtLogin.TabIndex = 15;
-            this.chkStartServerAtLogin.Text = "Start Server at Login";
-            this.chkStartServerAtLogin.UseVisualStyleBackColor = true;
-            this.chkStartServerAtLogin.CheckedChanged += new System.EventHandler(this.chkStartServerAtLogin_CheckedChanged);
+            chkStartServerAtLogin.AutoSize = true;
+            chkStartServerAtLogin.Location = new Point(12, 176);
+            chkStartServerAtLogin.Name = "chkStartServerAtLogin";
+            chkStartServerAtLogin.Size = new Size(123, 17);
+            chkStartServerAtLogin.TabIndex = 15;
+            chkStartServerAtLogin.Text = "Start Server at Login";
+            chkStartServerAtLogin.UseVisualStyleBackColor = true;
+            chkStartServerAtLogin.CheckedChanged += ChkStartServerAtLoginCheckedChanged;
             // 
             // lnkEditWebConfig
             // 
-            this.lnkEditWebConfig.AutoSize = true;
-            this.lnkEditWebConfig.Location = new System.Drawing.Point(245, 109);
-            this.lnkEditWebConfig.Name = "lnkEditWebConfig";
-            this.lnkEditWebConfig.Size = new System.Drawing.Size(83, 13);
-            this.lnkEditWebConfig.TabIndex = 16;
-            this.lnkEditWebConfig.TabStop = true;
-            this.lnkEditWebConfig.Text = "Edit Web.config";
-            this.lnkEditWebConfig.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkEditWebConfig_LinkClicked);
+            lnkEditWebConfig.AutoSize = true;
+            lnkEditWebConfig.Location = new Point(245, 109);
+            lnkEditWebConfig.Name = "lnkEditWebConfig";
+            lnkEditWebConfig.Size = new Size(83, 13);
+            lnkEditWebConfig.TabIndex = 16;
+            lnkEditWebConfig.TabStop = true;
+            lnkEditWebConfig.Text = "Edit Web.config";
+            lnkEditWebConfig.LinkClicked += LnkEditWebConfigLinkClicked;
             // 
             // itmOpen
             // 
-            this.itmOpen.Enabled = false;
-            this.itmOpen.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.itmOpen.Image = global::lightAsp.Properties.Resources.browse;
-            this.itmOpen.Name = "itmOpen";
-            this.itmOpen.Size = new System.Drawing.Size(181, 38);
-            this.itmOpen.Text = "Open main page";
-            this.itmOpen.Click += new System.EventHandler(this.itmOpen_Click);
+            itmOpen.Enabled = false;
+            itmOpen.Font = new Font("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point, ((0)));
+            itmOpen.Image = Resources.browse;
+            itmOpen.Name = "itmOpen";
+            itmOpen.Size = new Size(181, 38);
+            itmOpen.Text = "Open main page";
+            itmOpen.Click += ItmOpenClick;
             // 
             // itmEditWebConfig
             // 
-            this.itmEditWebConfig.Image = global::lightAsp.Properties.Resources.log;
-            this.itmEditWebConfig.Name = "itmEditWebConfig";
-            this.itmEditWebConfig.Size = new System.Drawing.Size(181, 38);
-            this.itmEditWebConfig.Text = "Edit Web.config";
-            this.itmEditWebConfig.Click += new System.EventHandler(this.itmEditWebConfig_Click);
+            itmEditWebConfig.Image = Resources.log;
+            itmEditWebConfig.Name = "itmEditWebConfig";
+            itmEditWebConfig.Size = new Size(181, 38);
+            itmEditWebConfig.Text = "Edit Web.config";
+            itmEditWebConfig.Click += ItmEditWebConfigClick;
             // 
             // itmSettings
             // 
-            this.itmSettings.Image = ((System.Drawing.Image)(resources.GetObject("itmSettings.Image")));
-            this.itmSettings.Name = "itmSettings";
-            this.itmSettings.Size = new System.Drawing.Size(181, 38);
-            this.itmSettings.Text = "Configuration";
-            this.itmSettings.Click += new System.EventHandler(this.itmSettings_Click);
+            itmSettings.Image = ((Image) (resources.GetObject("itmSettings.Image")));
+            itmSettings.Name = "itmSettings";
+            itmSettings.Size = new Size(181, 38);
+            itmSettings.Text = "Configuration";
+            itmSettings.Click += ItmSettingsClick;
             // 
             // itmAbout
             // 
-            this.itmAbout.Image = global::lightAsp.Properties.Resources.webserver;
-            this.itmAbout.Name = "itmAbout";
-            this.itmAbout.Size = new System.Drawing.Size(181, 38);
-            this.itmAbout.Text = "About";
-            this.itmAbout.Click += new System.EventHandler(this.itmAbout_Click);
+            itmAbout.Image = Resources.webserver;
+            itmAbout.Name = "itmAbout";
+            itmAbout.Size = new Size(181, 38);
+            itmAbout.Text = "About";
+            itmAbout.Click += ItmAboutClick;
             // 
             // itmStartStop
             // 
-            this.itmStartStop.Image = global::lightAsp.Properties.Resources.run;
-            this.itmStartStop.Name = "itmStartStop";
-            this.itmStartStop.Size = new System.Drawing.Size(181, 38);
-            this.itmStartStop.Text = "Start Server";
-            this.itmStartStop.Click += new System.EventHandler(this.itmStartStop_Click);
+            itmStartStop.Image = Resources.run;
+            itmStartStop.Name = "itmStartStop";
+            itmStartStop.Size = new Size(181, 38);
+            itmStartStop.Text = "Start Server";
+            itmStartStop.Click += ItmStartStopClick;
             // 
             // FrmMain
             // 
-            this.ClientSize = new System.Drawing.Size(341, 236);
-            this.Controls.Add(this.chkStartServerAtLogin);
-            this.Controls.Add(this.lblPhisicalDirectory);
-            this.Controls.Add(this.lnkEditWebConfig);
-            this.Controls.Add(this.lnkWiki);
-            this.Controls.Add(this.lblLink);
-            this.Controls.Add(this.txtPort);
-            this.Controls.Add(this.lblSeparatorH);
-            this.Controls.Add(this.txtVirtualDirectory);
-            this.Controls.Add(this.lblPort);
-            this.Controls.Add(this.lblVirtualDirectory);
-            this.Controls.Add(this.txtPhisicalDirectory);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.btnShutdown);
-            this.Controls.Add(this.chkDisallowRemoteConnections);
-            this.Controls.Add(this.btnBrowse);
-            this.Controls.Add(this.btnStartStop);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FrmMain";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ASP.net Light Server";
-            this.Load += new System.EventHandler(this.FrmMain_Load);
-            this.contextMenuStrip.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            ClientSize = new Size(341, 236);
+            Controls.Add(chkStartServerAtLogin);
+            Controls.Add(lblPhisicalDirectory);
+            Controls.Add(lnkEditWebConfig);
+            Controls.Add(lnkWiki);
+            Controls.Add(lblLink);
+            Controls.Add(txtPort);
+            Controls.Add(lblSeparatorH);
+            Controls.Add(txtVirtualDirectory);
+            Controls.Add(lblPort);
+            Controls.Add(lblVirtualDirectory);
+            Controls.Add(txtPhisicalDirectory);
+            Controls.Add(btnOK);
+            Controls.Add(btnShutdown);
+            Controls.Add(chkDisallowRemoteConnections);
+            Controls.Add(btnBrowse);
+            Controls.Add(btnStartStop);
+            Icon = ((Icon) (resources.GetObject("$this.Icon")));
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FrmMain";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "ASP.net Light Server";
+            Load += FrmMain_Load;
+            contextMenuStrip.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
-        private void itmAbout_Click(object sender, EventArgs e)
+        private static void ItmAboutClick(object sender, EventArgs e)
         {
-            
-            string text = "Client-side ASP.NET runtime based on Microsoft Cassini ASP.NET Server.\nTeam Spitfire\n02 March 2008";
+            const string text =
+                "Client-side ASP.NET runtime based on Microsoft Cassini ASP.NET Server.\nTeam Spitfire\n02 March 2008";
             MessageBox.Show(text, "About", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
-        private void itmEditWebConfig_Click(object sender, EventArgs e)
+        private void ItmEditWebConfigClick(object sender, EventArgs e)
         {
-            this.EditWebConfig();
+            EditWebConfig();
         }
 
-        private void itmExit_Click(object sender, EventArgs e)
+        private void ItmExitClick(object sender, EventArgs e)
         {
-            this.Stop();
-            this.closing = true;
-            base.Close();
+            Stop();
+            closing = true;
+            Close();
         }
 
-        private void itmOpen_Click(object sender, EventArgs e)
+        private void ItmOpenClick(object sender, EventArgs e)
         {
-            if (this.lnkWiki.Enabled)
+            if (lnkWiki.Enabled)
             {
-                Process.Start(this.lnkWiki.Text);
+                Process.Start(lnkWiki.Text);
             }
         }
 
-        private void itmSettings_Click(object sender, EventArgs e)
+        private void ItmSettingsClick(object sender, EventArgs e)
         {
-            this.ShowWindow();
+            ShowWindow();
         }
 
-        private void itmStartStop_Click(object sender, EventArgs e)
+        private void ItmStartStopClick(object sender, EventArgs e)
         {
-            this.SwitchStatus();
+            SwitchStatus();
         }
 
-        private void lnkEditWebConfig_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LnkEditWebConfigLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.EditWebConfig();
+            EditWebConfig();
         }
 
-        private void lnkWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LnkWikiLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (this.lnkWiki.Enabled)
+            if (lnkWiki.Enabled)
             {
-                Process.Start(this.lnkWiki.Text);
+                Process.Start(lnkWiki.Text);
             }
         }
 
         private void LoadSettings()
         {
-            if (lightAsp.App.Settings.GetSetting("PhysicalDirectory") != null)
+            if (Settings.GetSetting("PhysicalDirectory") != null)
             {
-                this.txtPhisicalDirectory.Text = lightAsp.App.Settings.GetSetting("PhysicalDirectory");
+                txtPhisicalDirectory.Text = Settings.GetSetting("PhysicalDirectory");
             }
-            if (lightAsp.App.Settings.GetSetting("VirtualDirectory") != null)
+            if (Settings.GetSetting("VirtualDirectory") != null)
             {
-                this.txtVirtualDirectory.Text = lightAsp.App.Settings.GetSetting("VirtualDirectory");
+                txtVirtualDirectory.Text = Settings.GetSetting("VirtualDirectory");
             }
-            if (lightAsp.App.Settings.GetSetting("Port") != null)
+            if (Settings.GetSetting("Port") != null)
             {
-                this.txtPort.Text = lightAsp.App.Settings.GetSetting("Port");
+                txtPort.Text = Settings.GetSetting("Port");
             }
-            if (lightAsp.App.Settings.GetSetting("DisallowRemoteConnections") != null)
+            if (Settings.GetSetting("DisallowRemoteConnections") != null)
             {
-                this.chkDisallowRemoteConnections.Checked = bool.Parse(lightAsp.App.Settings.GetSetting("DisallowRemoteConnections"));
+                chkDisallowRemoteConnections.Checked = bool.Parse(Settings.GetSetting("DisallowRemoteConnections"));
             }
-            this.chkStartServerAtLogin.Checked = AutoStart.AutoStartEnabled;
+            chkStartServerAtLogin.Checked = AutoStart.AutoStartEnabled;
         }
 
-        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        private void NotifyIconDoubleClick(object sender, EventArgs e)
         {
-            if (this.lnkWiki.Enabled)
+            if (lnkWiki.Enabled)
             {
-                Process.Start(this.lnkWiki.Text);
+                Process.Start(lnkWiki.Text);
             }
             else
             {
-                this.ShowWindow();
+                ShowWindow();
             }
         }
 
         private void ShowWindow()
         {
-            base.ShowInTaskbar = true;
-            base.Show();
+            ShowInTaskbar = true;
+            Show();
         }
 
         private void Start()
         {
-            string text = this.txtPhisicalDirectory.Text;
+            string text = txtPhisicalDirectory.Text;
             if (text.StartsWith(@".\") || text.StartsWith(@"\"))
             {
                 string currentDirectory = Environment.CurrentDirectory;
@@ -550,12 +553,13 @@ namespace lightAsp.App
             }
             if (!Directory.Exists(text))
             {
-                MessageBox.Show("Physical Directory does not exist.\r\n" + text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Physical Directory does not exist.\r\n" + text, "Error", MessageBoxButtons.OK,
+                                MessageBoxIcon.Hand);
                 return;
             }
             try
             {
-                int num = int.Parse(this.txtPort.Text);
+                int num = int.Parse(txtPort.Text);
                 if ((num <= 0) || (num > 0xffff))
                 {
                     throw new Exception();
@@ -563,106 +567,122 @@ namespace lightAsp.App
             }
             catch
             {
-                MessageBox.Show("Invalid Port number (it must be greater than zero and smaller than 65535).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(@"Invalid Port number (it must be greater than zero and smaller than 65535).", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return;
             }
-            if ((this.txtVirtualDirectory.Text.Length != 0) && this.txtVirtualDirectory.Text.StartsWith("/"))
+            if ((txtVirtualDirectory.Text.Length != 0) && txtVirtualDirectory.Text.StartsWith("/"))
             {
-                if (this.server != null)
+                if (server != null)
                 {
-                    this.server.Stop();
+                    server.Stop();
                 }
                 try
                 {
-                    this.server = new Server(int.Parse(this.txtPort.Text), this.txtVirtualDirectory.Text, text, this.chkDisallowRemoteConnections.Checked);
-                    this.server.Start();
+                    server = new Server(int.Parse(txtPort.Text), txtVirtualDirectory.Text, text,
+                                        chkDisallowRemoteConnections.Checked);
+                    server.Start();
                 }
                 catch (Exception exception)
                 {
-                    if (!this.publishingTried)
+                    if (!publishingTried)
                     {
                         GacUtil.Install(Application.StartupPath + @"\lightAspServer.dll");
-                        this.publishingTried = true;
+                        publishingTried = true;
                         try
                         {
-                            this.server = new Server(int.Parse(this.txtPort.Text), this.txtVirtualDirectory.Text, text, this.chkDisallowRemoteConnections.Checked);
-                            this.server.Start();
-                            goto Label_022F;
+                            server = new Server(int.Parse(txtPort.Text), txtVirtualDirectory.Text, text,
+                                                chkDisallowRemoteConnections.Checked);
+                            server.Start();
+                            UpdateUi();
+                            SaveSetings(text, txtVirtualDirectory.Text, txtPort.Text,
+                                        chkDisallowRemoteConnections.Checked.ToString());
                         }
                         catch
                         {
-                            MessageBox.Show("Unable to start the Server.\r\n\r\n" + exception.Message + "\r\n\r\n" + exception.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                            MessageBox.Show(
+                                "Unable to start the Server.\r\n\r\n" + exception.Message + "\r\n\r\n" +
+                                exception.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                             return;
                         }
                     }
-                    MessageBox.Show("Unable to start the Server.\r\n\r\n" + exception.Message + "\r\n\r\n" + exception.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    MessageBox.Show(
+                        "Unable to start the Server.\r\n\r\n" + exception.Message + "\r\n\r\n" + exception.StackTrace,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                     return;
                 }
             }
             else
             {
-                MessageBox.Show("Invalid Virtual Directory.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(@"Invalid Virtual Directory.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return;
             }
-        Label_022F:
+
+            UpdateUi();
+            SaveSetings(text, txtVirtualDirectory.Text, txtPort.Text, chkDisallowRemoteConnections.Checked.ToString());
+        }
+
+        private void UpdateUi()
+        {
             //this.notifyIcon.Icon = Resources.WikiSmall;
-            this.txtPhisicalDirectory.Enabled = false;
-            this.btnBrowse.Enabled = false;
-            this.txtPort.Enabled = false;
-            this.txtVirtualDirectory.Enabled = false;
-            this.chkDisallowRemoteConnections.Enabled = false;
-            this.lnkWiki.Enabled = true;
-            this.lnkWiki.Text = this.server.RootUrl;//+ "Default.aspx";
-            this.btnStartStop.Text = "Stop";
-            this.itmStartStop.Text = "Stop";
-            this.itmStartStop.Image = lightAsp.Properties.Resources.stop;
-            this.itmOpen.Enabled = true;
-            lightAsp.App.Settings.SetSetting("PhysicalDirectory", text);
-            lightAsp.App.Settings.SetSetting("VirtualDirectory", this.txtVirtualDirectory.Text);
-            lightAsp.App.Settings.SetSetting("Port", this.txtPort.Text);
-            lightAsp.App.Settings.SetSetting("DisallowRemoteConnections", this.chkDisallowRemoteConnections.Checked.ToString());
-            lightAsp.App.Settings.Save();
+            txtPhisicalDirectory.Enabled = false;
+            btnBrowse.Enabled = false;
+            txtPort.Enabled = false;
+            txtVirtualDirectory.Enabled = false;
+            chkDisallowRemoteConnections.Enabled = false;
+            lnkWiki.Enabled = true;
+            lnkWiki.Text = server.RootUrl; //+ "Default.aspx";
+            btnStartStop.Text = "Stop";
+            itmStartStop.Text = "Stop";
+            itmStartStop.Image = Resources.stop;
+            itmOpen.Enabled = true;
+        }
+
+        private static void SaveSetings(string diskPath, string webPath, string port, string remoteConnection)
+        {
+            Settings.SetSetting("PhysicalDirectory", diskPath);
+            Settings.SetSetting("VirtualDirectory", webPath);
+            Settings.SetSetting("Port", port);
+            Settings.SetSetting("DisallowRemoteConnections", remoteConnection);
+            Settings.Save();
         }
 
         private void Stop()
         {
-            if (this.server != null)
-            {
-                this.server.Stop();
-                this.server = null;
-                this.txtPhisicalDirectory.Enabled = true;
-                this.btnBrowse.Enabled = true;
-                this.txtPort.Enabled = true;
-                this.txtVirtualDirectory.Enabled = true;
-                this.chkDisallowRemoteConnections.Enabled = true;
-                this.lnkWiki.Enabled = false;
-                this.lnkWiki.Text = "None";
-                this.btnStartStop.Text = "Start";
-                this.itmStartStop.Text = "Start";
-                this.itmStartStop.Image = lightAsp.Properties.Resources.run;
-                this.itmOpen.Enabled = false;
-                //this.notifyIcon.Icon = Resources.WikiSmallGray;
-            }
+            if (server == null) return;
+            server.Stop();
+            server = null;
+            txtPhisicalDirectory.Enabled = true;
+            btnBrowse.Enabled = true;
+            txtPort.Enabled = true;
+            txtVirtualDirectory.Enabled = true;
+            chkDisallowRemoteConnections.Enabled = true;
+            lnkWiki.Enabled = false;
+            lnkWiki.Text = "None";
+            btnStartStop.Text = "Start";
+            itmStartStop.Text = "Start";
+            itmStartStop.Image = Resources.run;
+            itmOpen.Enabled = false;
+            //this.notifyIcon.Icon = Resources.WikiSmallGray;
         }
 
         private void SwitchStatus()
         {
-            if (this.server != null)
+            if (server != null)
             {
-                if (this.server.Running)
+                if (server.Running)
                 {
-                    this.Stop();
+                    Stop();
                 }
                 else
                 {
-                    this.Start();
+                    Start();
                 }
             }
             else
             {
-                this.Start();
+                Start();
             }
         }
     }
 }
-

@@ -1,28 +1,22 @@
-namespace lightAsp.App
-{
-    using System;
-    using System.Diagnostics;
-    using System.Windows.Forms;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 
+namespace lightAsp.Desktop
+{
     internal static class Program
     {
         [STAThread]
         private static void Main(string[] args)
         {
             var currentDomain = AppDomain.CurrentDomain;
-            currentDomain.AssemblyResolve += new ResolveEventHandler(currentDomain_AssemblyResolve);
+            currentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Process[] processes = Process.GetProcesses();
-            int num = 0;
-            for (int i = 0; i < processes.Length; i++)
-            {
-                if (processes[i].ProcessName.ToLower().Equals("wikidesktop"))
-                {
-                    num++;
-                }
-            }
+            int num = processes.Count(t => t.ProcessName.ToLower().Equals("wikidesktop"));
             if (num <= 1)
             {
                 try
@@ -58,7 +52,7 @@ namespace lightAsp.App
             }
         }
 
-        static System.Reflection.Assembly currentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        static System.Reflection.Assembly CurrentDomainAssemblyResolve(object sender, ResolveEventArgs args)
         {
             return null;
         }

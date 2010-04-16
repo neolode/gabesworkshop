@@ -1,14 +1,13 @@
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using System.Web;
+
 namespace lightAsp.WebServer
 {
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using System.Web;
-
     internal class Host : MarshalByRefObject
     {
         private bool _disallowRemoteConnections;
@@ -29,26 +28,63 @@ namespace lightAsp.WebServer
         private bool _stopped;
         private string _virtualPath;
 
-        public void Configure(Server server, int port, string virtualPath, string physicalPath, string installPath, bool disallowRemoteConnections)
+        public string InstallPath
         {
-            this._server = server;
-            this._disallowRemoteConnections = disallowRemoteConnections;
-            this._port = port;
-            this._virtualPath = virtualPath;
-            this._lowerCasedVirtualPath = CultureInfo.InvariantCulture.TextInfo.ToLower(this._virtualPath);
-            this._lowerCasedVirtualPathWithTrailingSlash = virtualPath.EndsWith("/") ? virtualPath : (virtualPath + "/");
-            this._lowerCasedVirtualPathWithTrailingSlash = CultureInfo.InvariantCulture.TextInfo.ToLower(this._lowerCasedVirtualPathWithTrailingSlash);
-            this._physicalPath = physicalPath;
-            this._installPath = installPath;
-            this._physicalClientScriptPath = installPath + @"\asp.netclientfiles\";
-            string fileVersion = FileVersionInfo.GetVersionInfo(typeof(HttpRuntime).Module.FullyQualifiedName).FileVersion;
+            get { return _installPath; }
+        }
+
+        public string NormalizedVirtualPath
+        {
+            get { return _lowerCasedVirtualPathWithTrailingSlash; }
+        }
+
+        public string PhysicalClientScriptPath
+        {
+            get { return _physicalClientScriptPath; }
+        }
+
+        public string PhysicalPath
+        {
+            get { return _physicalPath; }
+        }
+
+        public int Port
+        {
+            get { return _port; }
+        }
+
+        public string VirtualPath
+        {
+            get { return _virtualPath; }
+        }
+
+        public void Configure(Server server, int port, string virtualPath, string physicalPath, string installPath,
+                              bool disallowRemoteConnections)
+        {
+            _server = server;
+            _disallowRemoteConnections = disallowRemoteConnections;
+            _port = port;
+            _virtualPath = virtualPath;
+            _lowerCasedVirtualPath = CultureInfo.InvariantCulture.TextInfo.ToLower(_virtualPath);
+            _lowerCasedVirtualPathWithTrailingSlash = virtualPath.EndsWith("/") ? virtualPath : (virtualPath + "/");
+            _lowerCasedVirtualPathWithTrailingSlash =
+                CultureInfo.InvariantCulture.TextInfo.ToLower(_lowerCasedVirtualPathWithTrailingSlash);
+            _physicalPath = physicalPath;
+            _installPath = installPath;
+            _physicalClientScriptPath = installPath + @"\asp.netclientfiles\";
+            string fileVersion =
+// ReSharper disable AssignNullToNotNullAttribute
+                FileVersionInfo.GetVersionInfo(typeof (HttpRuntime).Module.FullyQualifiedName).FileVersion;
+// ReSharper restore AssignNullToNotNullAttribute
             string str2 = fileVersion.Substring(0, fileVersion.LastIndexOf('.'));
-            this._lowerCasedClientScriptPathWithTrailingSlashV10 = "/aspnet_client/system_web/" + fileVersion.Replace('.', '_') + "/";
-            this._lowerCasedClientScriptPathWithTrailingSlashV11 = "/aspnet_client/system_web/" + str2.Replace('.', '_') + "/";
-            this._onSocketAccept = new WaitCallback(this.OnSocketAccept);
-            this._onStart = new WaitCallback(this.OnStart);
-            this._onAppDomainUnload = new EventHandler(this.OnAppDomainUnload);
-            Thread.GetDomain().DomainUnload += this._onAppDomainUnload;
+            _lowerCasedClientScriptPathWithTrailingSlashV10 = "/aspnet_client/system_web/" +
+                                                              fileVersion.Replace('.', '_') + "/";
+            _lowerCasedClientScriptPathWithTrailingSlashV11 = "/aspnet_client/system_web/" + str2.Replace('.', '_') +
+                                                              "/";
+            _onSocketAccept = new WaitCallback(OnSocketAccept);
+            _onStart = new WaitCallback(OnStart);
+            _onAppDomainUnload = new EventHandler(OnAppDomainUnload);
+            Thread.GetDomain().DomainUnload += _onAppDomainUnload;
         }
 
         public override object InitializeLifetimeService()
@@ -63,9 +99,9 @@ namespace lightAsp.WebServer
                 return false;
             }
             path = CultureInfo.InvariantCulture.TextInfo.ToLower(path);
-            if (!(path == this._lowerCasedVirtualPath))
+            if (path != _lowerCasedVirtualPath)
             {
-                return (path == this._lowerCasedVirtualPathWithTrailingSlash);
+                return (path == _lowerCasedVirtualPathWithTrailingSlash);
             }
             return true;
         }
@@ -74,7 +110,7 @@ namespace lightAsp.WebServer
         {
             bool flag;
             string str;
-            return this.IsVirtualPathInApp(path, out flag, out str);
+            return IsVirtualPathInApp(path, out flag, out str);
         }
 
         public bool IsVirtualPathInApp(string path, out bool isClientScriptPath, out string clientScript)
@@ -83,39 +119,39 @@ namespace lightAsp.WebServer
             clientScript = null;
             if (path != null)
             {
-                if ((this._virtualPath == "/") && path.StartsWith("/"))
+                if ((_virtualPath == "/") && path.StartsWith("/"))
                 {
-                    if (path.StartsWith(this._lowerCasedClientScriptPathWithTrailingSlashV10))
+                    if (path.StartsWith(_lowerCasedClientScriptPathWithTrailingSlashV10))
                     {
                         isClientScriptPath = true;
-                        clientScript = path.Substring(this._lowerCasedClientScriptPathWithTrailingSlashV10.Length);
+                        clientScript = path.Substring(_lowerCasedClientScriptPathWithTrailingSlashV10.Length);
                     }
-                    if (path.StartsWith(this._lowerCasedClientScriptPathWithTrailingSlashV11))
+                    if (path.StartsWith(_lowerCasedClientScriptPathWithTrailingSlashV11))
                     {
                         isClientScriptPath = true;
-                        clientScript = path.Substring(this._lowerCasedClientScriptPathWithTrailingSlashV11.Length);
+                        clientScript = path.Substring(_lowerCasedClientScriptPathWithTrailingSlashV11.Length);
                     }
                     return true;
                 }
                 path = CultureInfo.InvariantCulture.TextInfo.ToLower(path);
-                if (path.StartsWith(this._lowerCasedVirtualPathWithTrailingSlash))
+                if (path.StartsWith(_lowerCasedVirtualPathWithTrailingSlash))
                 {
                     return true;
                 }
-                if (path == this._lowerCasedVirtualPath)
+                if (path == _lowerCasedVirtualPath)
                 {
                     return true;
                 }
-                if (path.StartsWith(this._lowerCasedClientScriptPathWithTrailingSlashV10))
+                if (path.StartsWith(_lowerCasedClientScriptPathWithTrailingSlashV10))
                 {
                     isClientScriptPath = true;
-                    clientScript = path.Substring(this._lowerCasedClientScriptPathWithTrailingSlashV10.Length);
+                    clientScript = path.Substring(_lowerCasedClientScriptPathWithTrailingSlashV10.Length);
                     return true;
                 }
-                if (path.StartsWith(this._lowerCasedClientScriptPathWithTrailingSlashV11))
+                if (path.StartsWith(_lowerCasedClientScriptPathWithTrailingSlashV11))
                 {
                     isClientScriptPath = true;
-                    clientScript = path.Substring(this._lowerCasedClientScriptPathWithTrailingSlashV11.Length);
+                    clientScript = path.Substring(_lowerCasedClientScriptPathWithTrailingSlashV11.Length);
                     return true;
                 }
             }
@@ -124,28 +160,28 @@ namespace lightAsp.WebServer
 
         private void OnAppDomainUnload(object unusedObject, EventArgs unusedEventArgs)
         {
-            Thread.GetDomain().DomainUnload -= this._onAppDomainUnload;
-            if (!this._stopped)
+            Thread.GetDomain().DomainUnload -= _onAppDomainUnload;
+            if (!_stopped)
             {
-                this.Stop();
-                this._server.Restart();
-                this._server = null;
+                Stop();
+                _server.Restart();
+                _server = null;
             }
         }
 
         private void OnSocketAccept(object acceptedSocket)
         {
-            new lightAsp.WebServer.Connection(this, (Socket) acceptedSocket, this._disallowRemoteConnections).ProcessOneRequest();
+            new Connection(this, (Socket) acceptedSocket, _disallowRemoteConnections).ProcessOneRequest();
         }
 
         private void OnStart(object unused)
         {
-            while (this._started)
+            while (_started)
             {
                 try
                 {
-                    Socket state = this._socket.Accept();
-                    ThreadPool.QueueUserWorkItem(this._onSocketAccept, state);
+                    Socket state = _socket.Accept();
+                    ThreadPool.QueueUserWorkItem(_onSocketAccept, state);
                     continue;
                 }
                 catch
@@ -154,32 +190,32 @@ namespace lightAsp.WebServer
                     continue;
                 }
             }
-            this._stopped = true;
+            _stopped = true;
         }
 
         public void Start()
         {
-            if (this._started)
+            if (_started)
             {
                 throw new InvalidOperationException();
             }
-            this._socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this._socket.Bind(new IPEndPoint(IPAddress.Any, this._port));
-            this._socket.Listen(0x7fffffff);
-            this._started = true;
-            ThreadPool.QueueUserWorkItem(this._onStart);
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(new IPEndPoint(IPAddress.Any, _port));
+            _socket.Listen(0x7fffffff);
+            _started = true;
+            ThreadPool.QueueUserWorkItem(_onStart);
         }
 
         public void Stop()
         {
-            if (!this._started)
+            if (!_started)
             {
                 return;
             }
-            this._started = false;
+            _started = false;
             try
             {
-                this._socket.Close();
+                _socket.Close();
                 goto Label_0031;
             }
             catch
@@ -188,64 +224,15 @@ namespace lightAsp.WebServer
             }
             finally
             {
-                this._socket = null;
+                _socket = null;
             }
-        Label_002A:
+            Label_002A:
             Thread.Sleep(100);
-        Label_0031:
-            if (!this._stopped)
+            Label_0031:
+            if (!_stopped)
             {
                 goto Label_002A;
             }
         }
-
-        public string InstallPath
-        {
-            get
-            {
-                return this._installPath;
-            }
-        }
-
-        public string NormalizedVirtualPath
-        {
-            get
-            {
-                return this._lowerCasedVirtualPathWithTrailingSlash;
-            }
-        }
-
-        public string PhysicalClientScriptPath
-        {
-            get
-            {
-                return this._physicalClientScriptPath;
-            }
-        }
-
-        public string PhysicalPath
-        {
-            get
-            {
-                return this._physicalPath;
-            }
-        }
-
-        public int Port
-        {
-            get
-            {
-                return this._port;
-            }
-        }
-
-        public string VirtualPath
-        {
-            get
-            {
-                return this._virtualPath;
-            }
-        }
     }
 }
-
