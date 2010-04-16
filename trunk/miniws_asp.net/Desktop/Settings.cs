@@ -1,19 +1,22 @@
-namespace lightAsp.App
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
 
+namespace lightAsp.Desktop
+{
     public static class Settings
     {
-        private static Dictionary<string, string> settings = new Dictionary<string, string>();
-        private static string SettingsFile = System.Windows.Forms.Application.StartupPath + @"\Settings.xml";//(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\ScrewTurn Software\ASP.net Light Server\Settings.txt");
+        private static Dictionary<string, string> _settings = new Dictionary<string, string>();
+
+        private static readonly string SettingsFile = Application.StartupPath + @"\Settings.xml";
+                              //(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\ScrewTurn Software\ASP.net Light Server\Settings.txt");
 
         public static string GetSetting(string name)
         {
             string str;
-            if (settings.TryGetValue(name, out str))
+            if (_settings.TryGetValue(name, out str))
             {
                 return str;
             }
@@ -23,18 +26,18 @@ namespace lightAsp.App
         public static void Load()
         {
             FileStream stream = null;
-            settings = new Dictionary<string, string>();
+            _settings = new Dictionary<string, string>();
             try
             {
                 stream = new FileStream(SettingsFile, FileMode.Open, FileAccess.Read, FileShare.None);
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                var reader = new StreamReader(stream, Encoding.UTF8);
                 string str = reader.ReadToEnd();
                 reader.Close();
-                string[] strArray = str.Split(new char[] { '\n' });
-                for (int i = 0; i < strArray.Length; i++)
+                string[] strArray = str.Split(new[] {'\n'});
+                foreach (var t in strArray)
                 {
-                    string[] strArray2 = strArray[i].Split(new char[] { '=' });
-                    settings.Add(strArray2[0].Trim(), strArray2[1].Trim());
+                    var strArray2 = t.Split(new[] {'='});
+                    _settings.Add(strArray2[0].Trim(), strArray2[1].Trim());
                 }
             }
             catch
@@ -63,12 +66,12 @@ namespace lightAsp.App
             try
             {
                 stream = new FileStream(SettingsFile, FileMode.Create, FileAccess.Write, FileShare.None);
-                string[] array = new string[settings.Keys.Count];
-                settings.Keys.CopyTo(array, 0);
+                var array = new string[_settings.Keys.Count];
+                _settings.Keys.CopyTo(array, 0);
                 string s = "";
                 for (int i = 0; i < array.Length; i++)
                 {
-                    s = s + array[i] + "=" + settings[array[i]];
+                    s = s + array[i] + "=" + _settings[array[i]];
                     if (i != (array.Length - 1))
                     {
                         s = s + "\n";
@@ -95,8 +98,7 @@ namespace lightAsp.App
 
         public static void SetSetting(string name, string value)
         {
-            settings[name] = value;
+            _settings[name] = value;
         }
     }
 }
-

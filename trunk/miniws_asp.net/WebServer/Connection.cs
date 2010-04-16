@@ -1,13 +1,13 @@
+using System;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Web;
+
 namespace lightAsp.WebServer
 {
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Text;
-    using System.Web;
-
     internal class Connection
     {
         private bool _disallowRemoteConnections;
@@ -16,24 +16,60 @@ namespace lightAsp.WebServer
 
         public Connection(Host host, Socket socket, bool disallowRemoteConnections)
         {
-            this._host = host;
-            this._socket = socket;
-            this._disallowRemoteConnections = disallowRemoteConnections;
+            _host = host;
+            _socket = socket;
+            _disallowRemoteConnections = disallowRemoteConnections;
+        }
+
+        public bool Connected
+        {
+            get { return _socket.Connected; }
+        }
+
+        public bool IsLocal
+        {
+            get { return (LocalIp == RemoteIp); }
+        }
+
+        public string LocalIp
+        {
+            get
+            {
+                var localEndPoint = (IPEndPoint) _socket.LocalEndPoint;
+                if ((localEndPoint != null) && (localEndPoint.Address != null))
+                {
+                    return localEndPoint.Address.ToString();
+                }
+                return "127.0.0.1";
+            }
+        }
+
+        public string RemoteIp
+        {
+            get
+            {
+                var remoteEndPoint = (IPEndPoint) _socket.RemoteEndPoint;
+                if ((remoteEndPoint != null) && (remoteEndPoint.Address != null))
+                {
+                    return remoteEndPoint.Address.ToString();
+                }
+                return "127.0.0.1";
+            }
         }
 
         public void Close()
         {
             try
             {
-                this._socket.Shutdown(SocketShutdown.Both);
-                this._socket.Close();
+                _socket.Shutdown(SocketShutdown.Both);
+                _socket.Close();
             }
             catch
             {
             }
             finally
             {
-                this._socket = null;
+                _socket = null;
             }
         }
 
@@ -44,7 +80,7 @@ namespace lightAsp.WebServer
             int startIndex = fileName.LastIndexOf('.');
             if ((startIndex >= 0) && ((str2 = fileName.Substring(startIndex)) != null))
             {
-                if (!(str2 == ".js"))
+                if (str2 != ".js")
                 {
                     if (str2 == ".gif")
                     {
@@ -69,10 +105,16 @@ namespace lightAsp.WebServer
 
         private static string MakeResponseHeaders(int statusCode, string moreHeaders, int contentLength, bool keepAlive)
         {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(string.Concat(new object[] { "HTTP/1.1 ", statusCode, " ", HttpWorkerRequest.GetStatusDescription(statusCode), "\r\n" }));
+            var builder = new StringBuilder();
+            builder.Append(
+                string.Concat(new object[]
+                                  {
+                                      "HTTP/1.1 ", statusCode, " ", HttpWorkerRequest.GetStatusDescription(statusCode),
+                                      "\r\n"
+                                  }));
             builder.Append("Server: Microsoft-Cassini/" + Messages.VersionString + "\r\n");
-            builder.Append("Date: " + DateTime.Now.ToUniversalTime().ToString("R", DateTimeFormatInfo.InvariantInfo) + "\r\n");
+            builder.Append("Date: " + DateTime.Now.ToUniversalTime().ToString("R", DateTimeFormatInfo.InvariantInfo) +
+                           "\r\n");
             if (contentLength >= 0)
             {
                 builder.Append("Content-Length: " + contentLength + "\r\n");
@@ -91,13 +133,13 @@ namespace lightAsp.WebServer
 
         public void ProcessOneRequest()
         {
-            if (this.WaitForRequestBytes() == 0)
+            if (WaitForRequestBytes() == 0)
             {
-                this.WriteErrorAndClose(400);
+                WriteErrorAndClose(400);
             }
             else
             {
-                new Request(this._host, this, this._disallowRemoteConnections).Process();
+                new Request(_host, this, _disallowRemoteConnections).Process();
             }
         }
 
@@ -105,24 +147,24 @@ namespace lightAsp.WebServer
         {
             try
             {
-                if (this.WaitForRequestBytes() == 0)
+                if (WaitForRequestBytes() == 0)
                 {
                     return null;
                 }
-                int available = this._socket.Available;
+                int available = _socket.Available;
                 if (available > maxBytes)
                 {
                     available = maxBytes;
                 }
                 int count = 0;
-                byte[] buffer = new byte[available];
+                var buffer = new byte[available];
                 if (available > 0)
                 {
-                    count = this._socket.Receive(buffer, 0, available, SocketFlags.None);
+                    count = _socket.Receive(buffer, 0, available, SocketFlags.None);
                 }
                 if (count < available)
                 {
-                    byte[] dst = new byte[count];
+                    var dst = new byte[count];
                     if (count > 0)
                     {
                         Buffer.BlockCopy(buffer, 0, dst, 0, count);
@@ -142,15 +184,15 @@ namespace lightAsp.WebServer
             int available = 0;
             try
             {
-                if (this._socket.Available == 0)
+                if (_socket.Available == 0)
                 {
-                    this._socket.Poll(0x186a0, SelectMode.SelectRead);
-                    if ((this._socket.Available == 0) && this._socket.Connected)
+                    _socket.Poll(0x186a0, SelectMode.SelectRead);
+                    if ((_socket.Available == 0) && _socket.Connected)
                     {
-                        this._socket.Poll(0x989680, SelectMode.SelectRead);
+                        _socket.Poll(0x989680, SelectMode.SelectRead);
                     }
                 }
-                available = this._socket.Available;
+                available = _socket.Available;
             }
             catch
             {
@@ -160,19 +202,19 @@ namespace lightAsp.WebServer
 
         public void Write100Continue()
         {
-            this.WriteEntireResponseFromString(100, null, null, true);
+            WriteEntireResponseFromString(100, null, null, true);
         }
 
         public void WriteBody(byte[] data, int offset, int length)
         {
-            this._socket.Send(data, offset, length, SocketFlags.None);
+            _socket.Send(data, offset, length, SocketFlags.None);
         }
 
         public void WriteEntireResponseFromFile(string fileName, bool keepAlive)
         {
-            if (!System.IO.File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
-                this.WriteErrorAndClose(0x194);
+                WriteErrorAndClose(0x194);
             }
             else
             {
@@ -181,19 +223,19 @@ namespace lightAsp.WebServer
                 try
                 {
                     stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    int length = (int) stream.Length;
-                    byte[] buffer = new byte[length];
+                    var length = (int) stream.Length;
+                    var buffer = new byte[length];
                     int contentLength = stream.Read(buffer, 0, length);
                     string s = MakeResponseHeaders(200, MakeContentTypeHeader(fileName), contentLength, keepAlive);
-                    this._socket.Send(Encoding.UTF8.GetBytes(s));
-                    this._socket.Send(buffer, 0, contentLength, SocketFlags.None);
+                    _socket.Send(Encoding.UTF8.GetBytes(s));
+                    _socket.Send(buffer, 0, contentLength, SocketFlags.None);
                     flag = true;
                 }
                 finally
                 {
                     if (!keepAlive || !flag)
                     {
-                        this.Close();
+                        Close();
                     }
                     if (stream != null)
                     {
@@ -209,79 +251,36 @@ namespace lightAsp.WebServer
             {
                 int contentLength = (body != null) ? Encoding.UTF8.GetByteCount(body) : 0;
                 string str = MakeResponseHeaders(statusCode, extraHeaders, contentLength, keepAlive);
-                this._socket.Send(Encoding.UTF8.GetBytes(str + body));
+                _socket.Send(Encoding.UTF8.GetBytes(str + body));
             }
             finally
             {
                 if (!keepAlive)
                 {
-                    this.Close();
+                    Close();
                 }
             }
         }
 
         public void WriteErrorAndClose(int statusCode)
         {
-            this.WriteErrorAndClose(statusCode, null);
+            WriteErrorAndClose(statusCode, null);
         }
 
         public void WriteErrorAndClose(int statusCode, string message)
         {
-            string body = Messages.FormatErrorMessageBody(statusCode, this._host.VirtualPath);
-            if ((message != null) && (message.Length > 0))
+            string body = Messages.FormatErrorMessageBody(statusCode, _host.VirtualPath);
+            if (!string.IsNullOrEmpty(message))
             {
                 body = body + "\r\n<!--\r\n" + message + "\r\n-->";
             }
-            this.WriteEntireResponseFromString(statusCode, null, body, false);
+            WriteEntireResponseFromString(statusCode, null, body, false);
         }
 
         public void WriteHeaders(int statusCode, string extraHeaders)
         {
             string s = MakeResponseHeaders(statusCode, extraHeaders, -1, false);
-            this._socket.Send(Encoding.UTF8.GetBytes(s));
-        }
-
-        public bool Connected
-        {
-            get
-            {
-                return this._socket.Connected;
-            }
-        }
-
-        public bool IsLocal
-        {
-            get
-            {
-                return (this.LocalIP == this.RemoteIP);
-            }
-        }
-
-        public string LocalIP
-        {
-            get
-            {
-                IPEndPoint localEndPoint = (IPEndPoint) this._socket.LocalEndPoint;
-                if ((localEndPoint != null) && (localEndPoint.Address != null))
-                {
-                    return localEndPoint.Address.ToString();
-                }
-                return "127.0.0.1";
-            }
-        }
-
-        public string RemoteIP
-        {
-            get
-            {
-                IPEndPoint remoteEndPoint = (IPEndPoint) this._socket.RemoteEndPoint;
-                if ((remoteEndPoint != null) && (remoteEndPoint.Address != null))
-                {
-                    return remoteEndPoint.Address.ToString();
-                }
-                return "127.0.0.1";
-            }
+            _socket.Send(Encoding.UTF8.GetBytes(s));
         }
     }
 }
-

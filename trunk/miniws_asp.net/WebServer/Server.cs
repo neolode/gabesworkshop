@@ -1,12 +1,12 @@
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Web;
+using System.Web.Hosting;
+using Microsoft.Win32;
+
 namespace lightAsp.WebServer
 {
-    using Microsoft.Win32;
-    using System;
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Web;
-    using System.Web.Hosting;
-
     public class Server : MarshalByRefObject
     {
         private bool _disallowRemoteConnections;
@@ -20,19 +20,49 @@ namespace lightAsp.WebServer
 
         public Server(int port, string virtualPath, string physicalPath, bool disallowRemoteConnections)
         {
-            this._port = port;
-            this._virtualPath = virtualPath;
-            this._physicalPath = physicalPath.EndsWith(@"\") ? physicalPath : (physicalPath + @"\");
-            this._disallowRemoteConnections = disallowRemoteConnections;
-            this._restartCallback = new WaitCallback(this.RestartCallback);
-            this._installPath = this.GetInstallPathAndConfigureAspNetIfNeeded();
-            this.CreateHost();
+            _port = port;
+            _virtualPath = virtualPath;
+            _physicalPath = physicalPath.EndsWith(@"\") ? physicalPath : (physicalPath + @"\");
+            _disallowRemoteConnections = disallowRemoteConnections;
+            _restartCallback = new WaitCallback(RestartCallback);
+            _installPath = GetInstallPathAndConfigureAspNetIfNeeded();
+            CreateHost();
+        }
+
+        public string InstallPath
+        {
+            get { return _installPath; }
+        }
+
+        public string PhysicalPath
+        {
+            get { return _physicalPath; }
+        }
+
+        public int Port
+        {
+            get { return _port; }
+        }
+
+        public string RootUrl
+        {
+            get { return ("http://localhost" + ((_port != 80) ? (":" + _port) : "") + _virtualPath); }
+        }
+
+        public bool Running
+        {
+            get { return _running; }
+        }
+
+        public string VirtualPath
+        {
+            get { return _virtualPath; }
         }
 
         private void CreateHost()
         {
-            this._host = (Host) ApplicationHost.CreateApplicationHost(typeof(Host), this._virtualPath, this._physicalPath);
-            this._host.Configure(this, this._port, this._virtualPath, this._physicalPath, this._installPath, this._disallowRemoteConnections);
+            _host = (Host) ApplicationHost.CreateApplicationHost(typeof (Host), _virtualPath, _physicalPath);
+            _host.Configure(this, _port, _virtualPath, _physicalPath, _installPath, _disallowRemoteConnections);
         }
 
         private string GetInstallPathAndConfigureAspNetIfNeeded()
@@ -43,8 +73,14 @@ namespace lightAsp.WebServer
             string str = null;
             try
             {
-                FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(typeof(HttpRuntime).Module.FullyQualifiedName);
-                string str2 = string.Format("{0}.{1}.{2}.{3}", new object[] { versionInfo.FileMajorPart, versionInfo.FileMinorPart, versionInfo.FileBuildPart, versionInfo.FilePrivatePart });
+                FileVersionInfo versionInfo =
+                    FileVersionInfo.GetVersionInfo(typeof (HttpRuntime).Module.FullyQualifiedName);
+                string str2 = string.Format("{0}.{1}.{2}.{3}",
+                                            new object[]
+                                                {
+                                                    versionInfo.FileMajorPart, versionInfo.FileMinorPart,
+                                                    versionInfo.FileBuildPart, versionInfo.FilePrivatePart
+                                                });
                 string name = @"Software\Microsoft\ASP.NET\" + str2;
                 if (!str2.StartsWith("1.0."))
                 {
@@ -62,7 +98,7 @@ namespace lightAsp.WebServer
                 }
                 string str4 = "v" + str2.Substring(0, str2.LastIndexOf('.'));
                 key3 = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\.NETFramework");
-                string str5 = (string) key3.GetValue("InstallRoot");
+                var str5 = (string) key3.GetValue("InstallRoot");
                 if (str5.EndsWith(@"\"))
                 {
                     str5 = str5.Substring(0, str5.Length - 1);
@@ -100,86 +136,37 @@ namespace lightAsp.WebServer
 
         public void Restart()
         {
-            ThreadPool.QueueUserWorkItem(this._restartCallback);
+            ThreadPool.QueueUserWorkItem(_restartCallback);
         }
 
         private void RestartCallback(object unused)
         {
-            this.CreateHost();
-            this.Start();
+            CreateHost();
+            Start();
         }
 
         public void Start()
         {
-            if (this._host != null)
+            if (_host != null)
             {
-                this._host.Start();
-                this._running = true;
+                _host.Start();
+                _running = true;
             }
         }
 
         public void Stop()
         {
-            if (this._host != null)
+            if (_host != null)
             {
                 try
                 {
-                    this._host.Stop();
-                    this._running = false;
+                    _host.Stop();
+                    _running = false;
                 }
                 catch
                 {
                 }
             }
         }
-
-        public string InstallPath
-        {
-            get
-            {
-                return this._installPath;
-            }
-        }
-
-        public string PhysicalPath
-        {
-            get
-            {
-                return this._physicalPath;
-            }
-        }
-
-        public int Port
-        {
-            get
-            {
-                return this._port;
-            }
-        }
-
-        public string RootUrl
-        {
-            get
-            {
-                return ("http://localhost" + ((this._port != 80) ? (":" + this._port.ToString()) : "") + this._virtualPath);
-            }
-        }
-
-        public bool Running
-        {
-            get
-            {
-                return this._running;
-            }
-        }
-
-        public string VirtualPath
-        {
-            get
-            {
-                return this._virtualPath;
-            }
-        }
     }
 }
-
