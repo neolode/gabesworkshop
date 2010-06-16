@@ -11,19 +11,14 @@ using mshtml;
 
 namespace gs
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         int nav = 0;
         int navs = 0;
         long progress;
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
-            
-        }
-
-        private void gweb_Navigated(object sender, Skybound.Gecko.GeckoNavigatedEventArgs e)
-        {
             
         }
 
@@ -37,17 +32,17 @@ namespace gs
             
             nav--;
             if (nav != 0) return;
-            HtmlElement head = webBrowser1.Document.GetElementsByTagName("head")[0];
-            HtmlElement scriptEl = webBrowser1.Document.CreateElement("script");
+            HtmlElement head = wbPlayer.Document.GetElementsByTagName("head")[0];
+            HtmlElement scriptEl = wbPlayer.Document.CreateElement("script");
             IHTMLScriptElement element = (IHTMLScriptElement)scriptEl.DomElement;
             element.src = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
             head.AppendChild(scriptEl);
 
-            scriptEl = webBrowser1.Document.CreateElement("script");
+            scriptEl = wbPlayer.Document.CreateElement("script");
             element = (IHTMLScriptElement)scriptEl.DomElement;
             element.text = global::gs.Properties.Resources.scriptJs;//"$(document).ready(function (){alert('jQ');});";//Application.StartupPath + @"\script.js";
             head.AppendChild(scriptEl);
-            timer1.Start();
+            startBuffer.Start();
 
                 
 
@@ -61,10 +56,10 @@ namespace gs
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (progress != 0) return;
-            webBrowser1.Show();
-            pictureBox1.Hide();
+            wbPlayer.Show();
+            bmpSplash.Hide();
             Text = "GrooveShark Desktop";
-            timer1.Stop();
+            startBuffer.Stop();
         }
 
         private void webBrowser1_ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
