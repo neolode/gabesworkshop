@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
 using mshtml;
 
 namespace gs
 {
-    public partial class frmMain : Form
+    public partial class FrmMain : Form
     {
         int nav = 0;
-        int navs = 0;
         long progress;
-        public frmMain()
+        public FrmMain()
         {
             InitializeComponent();
             
@@ -27,14 +19,14 @@ namespace gs
 
         }
 
-        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        private void WebBrowser1Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             
             nav--;
             if (nav != 0) return;
-            HtmlElement head = wbPlayer.Document.GetElementsByTagName("head")[0];
-            HtmlElement scriptEl = wbPlayer.Document.CreateElement("script");
-            IHTMLScriptElement element = (IHTMLScriptElement)scriptEl.DomElement;
+            var head = wbPlayer.Document.GetElementsByTagName("head")[0];
+            var scriptEl = wbPlayer.Document.CreateElement("script");
+            var element = (IHTMLScriptElement)scriptEl.DomElement;
             element.src = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
             head.AppendChild(scriptEl);
 
@@ -48,21 +40,21 @@ namespace gs
 
         }
 
-        private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private void WebBrowser1Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             nav++;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1Tick(object sender, EventArgs e)
         {
             if (progress != 0) return;
             wbPlayer.Show();
             bmpSplash.Hide();
-            Text = "GrooveShark Desktop";
+            Text = @"GrooveShark Desktop";
             startBuffer.Stop();
         }
 
-        private void webBrowser1_ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
+        private void WebBrowser1ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
         {
             progress = e.CurrentProgress;
         }
