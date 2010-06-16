@@ -60,9 +60,9 @@ namespace gs.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Crest1920x1200 {
+        internal static System.Drawing.Bitmap gs {
             get {
-                object obj = ResourceManager.GetObject("Crest1920x1200", resourceCulture);
+                object obj = ResourceManager.GetObject("gs", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
