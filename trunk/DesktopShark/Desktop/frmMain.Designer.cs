@@ -179,6 +179,7 @@
             this.wbPlayer.Location = new System.Drawing.Point(0, 0);
             this.wbPlayer.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbPlayer.Name = "wbPlayer";
+            this.wbPlayer.ScriptErrorsSuppressed = true;
             this.wbPlayer.ScrollBarsEnabled = false;
             this.wbPlayer.Size = new System.Drawing.Size(784, 549);
             this.wbPlayer.TabIndex = 5;
