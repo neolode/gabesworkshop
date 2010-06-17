@@ -67,6 +67,13 @@ namespace DeskShark.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap btn_close_h {
+            get {
+                object obj = ResourceManager.GetObject("btn_close_h", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap btn_max {
             get {
                 object obj = ResourceManager.GetObject("btn_max", resourceCulture);
@@ -84,6 +91,13 @@ namespace DeskShark.Properties {
         internal static System.Drawing.Bitmap btn_rest {
             get {
                 object obj = ResourceManager.GetObject("btn_rest", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap glass {
+            get {
+                object obj = ResourceManager.GetObject("glass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

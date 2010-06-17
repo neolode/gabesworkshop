@@ -67,11 +67,14 @@
             this.appLayout.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.appLayout.IsSplitterFixed = true;
             this.appLayout.Location = new System.Drawing.Point(0, 0);
+            this.appLayout.Margin = new System.Windows.Forms.Padding(0);
             this.appLayout.Name = "appLayout";
             this.appLayout.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // appLayout.Panel1
             // 
+            this.appLayout.Panel1.BackgroundImage = global::DeskShark.Properties.Resources.glass;
+            this.appLayout.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.appLayout.Panel1.Controls.Add(this.pbMin);
             this.appLayout.Panel1.Controls.Add(this.pbMax);
             this.appLayout.Panel1.Controls.Add(this.pbClose);
@@ -94,6 +97,7 @@
             // 
             // pbMin
             // 
+            this.pbMin.BackColor = System.Drawing.Color.Transparent;
             this.pbMin.Dock = System.Windows.Forms.DockStyle.Right;
             this.pbMin.Image = global::DeskShark.Properties.Resources.btn_min;
             this.pbMin.Location = new System.Drawing.Point(688, 0);
@@ -106,7 +110,7 @@
             // 
             // pbMax
             // 
-            this.pbMax.BackColor = System.Drawing.Color.Orange;
+            this.pbMax.BackColor = System.Drawing.Color.Transparent;
             this.pbMax.Dock = System.Windows.Forms.DockStyle.Right;
             this.pbMax.Image = global::DeskShark.Properties.Resources.btn_max;
             this.pbMax.Location = new System.Drawing.Point(720, 0);
@@ -119,6 +123,7 @@
             // 
             // pbClose
             // 
+            this.pbClose.BackColor = System.Drawing.Color.Transparent;
             this.pbClose.Dock = System.Windows.Forms.DockStyle.Right;
             this.pbClose.Image = global::DeskShark.Properties.Resources.btn_close;
             this.pbClose.Location = new System.Drawing.Point(752, 0);
@@ -127,10 +132,13 @@
             this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbClose.TabIndex = 2;
             this.pbClose.TabStop = false;
+            this.pbClose.MouseLeave += new System.EventHandler(this.pbClose_MouseLeave);
             this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
+            this.pbClose.MouseEnter += new System.EventHandler(this.pbClose_MouseEnter);
             // 
             // pbIco
             // 
+            this.pbIco.BackColor = System.Drawing.Color.Transparent;
             this.pbIco.Dock = System.Windows.Forms.DockStyle.Left;
             this.pbIco.Image = global::DeskShark.Properties.Resources.gs_ico;
             this.pbIco.Location = new System.Drawing.Point(0, 0);
@@ -144,6 +152,7 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
+            this.lblTitle.BackColor = System.Drawing.Color.Transparent;
             this.lblTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(52, 9);
             this.lblTitle.Name = "lblTitle";
