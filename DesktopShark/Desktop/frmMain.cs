@@ -112,5 +112,15 @@ namespace gs
             pbMax.Image = WindowState == FormWindowState.Normal ? global::DeskShark.Properties.Resources.btn_max : global::DeskShark.Properties.Resources.btn_rest;
         }
 
+        private void pbClose_MouseEnter(object sender, EventArgs e)
+        {
+            pbClose.Image = global::DeskShark.Properties.Resources.btn_close_h;
+        }
+
+        private void pbClose_MouseLeave(object sender, EventArgs e)
+        {
+            pbClose.Image = global::DeskShark.Properties.Resources.btn_close;
+        }
+
     }
 }
