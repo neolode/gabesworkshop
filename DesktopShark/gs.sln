@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gs", "gs\gs.csproj", "{EC9293DA-00A8-41DD-B1FB-F3E79B63780A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveShark Desktop App", "Desktop\DeskShark.csproj", "{EC9293DA-00A8-41DD-B1FB-F3E79B63780A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
