@@ -123,6 +123,13 @@ namespace miniws.Properties {
             }
         }
         
+        internal static System.Drawing.Icon webserver_on {
+            get {
+                object obj = ResourceManager.GetObject("webserver_on", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon webserverIcon {
             get {
                 object obj = ResourceManager.GetObject("webserverIcon", resourceCulture);

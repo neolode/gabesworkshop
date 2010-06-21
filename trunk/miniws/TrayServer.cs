@@ -277,6 +277,7 @@ namespace miniws
                 _startStopMenuItem.Image = Resources.stop;
                 Runin = true;
             }
+            _trayIcon.Icon = Runin?global::miniws.Properties.Resources.webserver_on:global::miniws.Properties.Resources.webserverIcon;
             _browseMenuItem.Enabled = Runin;
             _logMenuItem.Enabled = Runin;
             _separator5.Visible = Runin;
