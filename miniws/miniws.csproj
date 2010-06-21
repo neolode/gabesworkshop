@@ -108,6 +108,7 @@
     <None Include="res\GANT3.png" />
     <None Include="res\2project.png" />
     <None Include="res\refresh.png" />
+    <None Include="Resources\webserver_on.ico" />
     <Content Include="webserver.ico" />
     <Content Include="ZazouMiniWebServer.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
