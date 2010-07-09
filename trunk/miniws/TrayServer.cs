@@ -9,6 +9,7 @@ namespace miniws
     internal class TrayServer : ApplicationContext
     {
         private ToolStripMenuItem _aboutMenuItem;
+        private ToolStripMenuItem _configMenuItem;
         private ToolStripMenuItem _browseMenuItem;
         private ToolStripMenuItem _exitMenuItem;
         private ToolStripMenuItem _gantMenuItem;
@@ -54,6 +55,7 @@ namespace miniws
             _trayIcon = new NotifyIcon();
             _trayMenu = new ContextMenuStrip();
             _aboutMenuItem = new ToolStripMenuItem();
+            _configMenuItem = new ToolStripMenuItem();
             _nameMenuItem = new ToolStripMenuItem();
             _separator4 = new ToolStripSeparator();
             _versionMenuItem = new ToolStripMenuItem();
@@ -84,6 +86,7 @@ namespace miniws
             _trayMenu.Items.AddRange(new ToolStripItem[]
                                          {
                                              _aboutMenuItem,
+                                             _configMenuItem,
                                              _separator2,
                                              _startStopMenuItem,
                                              _restartMenuItem,
@@ -110,6 +113,14 @@ namespace miniws
             _aboutMenuItem.Name = "aboutToolStripMenuItem";
             _aboutMenuItem.Size = new Size(168, 38);
             _aboutMenuItem.Text = "About";
+            // 
+            // configMenuItem
+            // 
+            _configMenuItem.Image = Resources.img2project;
+            _configMenuItem.Name = "configToolStripMenuItem";
+            _configMenuItem.Size = new Size(168, 38);
+            _configMenuItem.Text = "Name";
+            _configMenuItem.Click += NameMenuItemClick;
             // 
             // nameToolStripMenuItem
             // 
