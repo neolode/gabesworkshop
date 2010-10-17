@@ -287,6 +287,8 @@ namespace miniws
                 _startStopMenuItem.Text = "Stop";
                 _startStopMenuItem.Image = Resources.stop;
                 Runin = true;
+                CBaseZMWSConfig bf = new CBaseZMWSConfig();
+                ZmwSimport.zmws_get_config(bf);
             }
             _trayIcon.Icon = Runin?global::miniws.Properties.Resources.webserver_on:global::miniws.Properties.Resources.webserverIcon;
             _browseMenuItem.Enabled = Runin;
