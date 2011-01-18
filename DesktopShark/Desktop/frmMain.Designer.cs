@@ -39,7 +39,7 @@
             this.pbIco = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.bmpSplash = new System.Windows.Forms.PictureBox();
-            this.wbPlayer = new System.Windows.Forms.WebBrowser();
+            this.wkPlayer = new WebKit.WebKitBrowser();
             this.appLayout.Panel1.SuspendLayout();
             this.appLayout.Panel2.SuspendLayout();
             this.appLayout.SuspendLayout();
@@ -87,8 +87,8 @@
             // 
             // appLayout.Panel2
             // 
+            this.appLayout.Panel2.Controls.Add(this.wkPlayer);
             this.appLayout.Panel2.Controls.Add(this.bmpSplash);
-            this.appLayout.Panel2.Controls.Add(this.wbPlayer);
             this.appLayout.Size = new System.Drawing.Size(784, 584);
             this.appLayout.SplitterDistance = 34;
             this.appLayout.SplitterWidth = 1;
@@ -172,22 +172,16 @@
             this.bmpSplash.TabIndex = 4;
             this.bmpSplash.TabStop = false;
             // 
-            // wbPlayer
+            // wkPlayer
             // 
-            this.wbPlayer.AllowWebBrowserDrop = false;
-            this.wbPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wbPlayer.Location = new System.Drawing.Point(0, 0);
-            this.wbPlayer.MinimumSize = new System.Drawing.Size(20, 20);
-            this.wbPlayer.Name = "wbPlayer";
-            this.wbPlayer.ScriptErrorsSuppressed = true;
-            this.wbPlayer.ScrollBarsEnabled = false;
-            this.wbPlayer.Size = new System.Drawing.Size(784, 549);
-            this.wbPlayer.TabIndex = 5;
-            this.wbPlayer.Url = new System.Uri("http://listen.grooveshark.com/", System.UriKind.Absolute);
-            this.wbPlayer.Visible = false;
-            this.wbPlayer.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.WebBrowser1Navigating);
-            this.wbPlayer.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbPlayer_DocumentCompleted);
-            this.wbPlayer.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.WebBrowser1Navigated);
+            this.wkPlayer.BackColor = System.Drawing.Color.White;
+            this.wkPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.wkPlayer.Location = new System.Drawing.Point(0, 0);
+            this.wkPlayer.Name = "wkPlayer";
+            this.wkPlayer.Size = new System.Drawing.Size(784, 549);
+            this.wkPlayer.TabIndex = 6;
+            this.wkPlayer.Url = new System.Uri("http://listen.grooveshark.com/", System.UriKind.Absolute);
+            this.wkPlayer.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wkPlayer_DocumentCompleted);
             // 
             // FrmMain
             // 
@@ -222,12 +216,12 @@
         private System.Windows.Forms.NotifyIcon trayIco;
         private System.Windows.Forms.SplitContainer appLayout;
         private System.Windows.Forms.PictureBox bmpSplash;
-        private System.Windows.Forms.WebBrowser wbPlayer;
         private System.Windows.Forms.PictureBox pbIco;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.PictureBox pbMin;
         private System.Windows.Forms.PictureBox pbMax;
         private System.Windows.Forms.PictureBox pbClose;
+        private WebKit.WebKitBrowser wkPlayer;
 
     }
 }

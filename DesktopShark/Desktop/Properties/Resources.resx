@@ -139,8 +139,9 @@
   <data name="scriptJs" xml:space="preserve">
     <value>
       $(document).ready(function (){
-        $('#sidebar').remove();
-        $('#mainContentWrapper').css('width','100%');
+        //$('#capital').remove();
+        //$('#application').css('width','100%');
+        //$('#page_wrapper').css('width','100%');
       });
     </value>
   </data>
