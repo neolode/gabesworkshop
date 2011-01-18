@@ -34,19 +34,13 @@ namespace gs
 
         private void WebBrowser1Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            
+
             nav--;
             if (nav != 0) return;
-            var head = wbPlayer.Document.GetElementsByTagName("head")[0];
-            var scriptEl = wbPlayer.Document.CreateElement("script");
-            var element = (IHTMLScriptElement)scriptEl.DomElement;
-            element.src = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
-            head.AppendChild(scriptEl);
 
-            scriptEl = wbPlayer.Document.CreateElement("script");
-            element = (IHTMLScriptElement)scriptEl.DomElement;
-            element.text = global::DeskShark.Properties.Resources.scriptJs;//"$(document).ready(function (){alert('jQ');});";//Application.StartupPath + @"\script.js";
-            head.AppendChild(scriptEl);
+            wkPlayer.Show();
+            bmpSplash.Hide();
+            
 
             startBuffer.Start();
         }
@@ -59,10 +53,20 @@ namespace gs
         private void Timer1Tick(object sender, EventArgs e)
         {
             if (progress != 0) return;
-            wbPlayer.Show();
-            bmpSplash.Hide();
+            
             Text = @"DeskShark";
             startBuffer.Stop();
+
+            //var head = wbPlayer.Document.GetElementsByTagName("body")[0];
+            ////var scriptEl = wbPlayer.Document.CreateElement("script");
+            ////var element = (IHTMLScriptElement)scriptEl.DomElement;
+            ////element.src = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
+            ////head.AppendChild(scriptEl);
+
+            //var scriptEl = wbPlayer.Document.CreateElement("script");
+            //var element = (IHTMLScriptElement)scriptEl.DomElement;
+            //element.text = global::DeskShark.Properties.Resources.scriptJs;//"$(document).ready(function (){alert('jQ');});";//Application.StartupPath + @"\script.js";
+            //head.AppendChild(scriptEl);
         }
 
         private void WebBrowser1ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
@@ -120,6 +124,20 @@ namespace gs
         private void pbClose_MouseLeave(object sender, EventArgs e)
         {
             pbClose.Image = global::DeskShark.Properties.Resources.btn_close;
+        }
+
+        private void wkPlayer_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            var head = wkPlayer.Document.GetElementsByTagName("body")[0];
+            //var scriptEl = wbPlayer.Document.CreateElement("script");
+            //var element = (IHTMLScriptElement)scriptEl.DomElement;
+            //element.src = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
+            //head.AppendChild(scriptEl);
+
+            var scriptEl = wkPlayer.Document.CreateElement("script");
+            var element = scriptEl.NodeValue = global::DeskShark.Properties.Resources.scriptJs;
+           //element.text = global::DeskShark.Properties.Resources.scriptJs;//"$(document).ready(function (){alert('jQ');});";//Application.StartupPath + @"\script.js";
+            head.AppendChild(scriptEl);
         }
 
     }
