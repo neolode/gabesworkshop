@@ -29,6 +29,9 @@ namespace gs
         public FrmMain()
         {
             InitializeComponent();
+            //MessageBox.Show(wkPlayer.UserAgent);
+            wkPlayer.UserAgent = "Mozilla/5.0 (Windows NT) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 DeskShark/" + Application.ProductVersion;
+            //MessageBox.Show(wkPlayer.UserAgent);
             
         }
 
@@ -128,16 +131,34 @@ namespace gs
 
         private void wkPlayer_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            var head = wkPlayer.Document.GetElementsByTagName("body")[0];
+            //var head = wkPlayer.Document.GetElementsByTagName("head")[0];
             //var scriptEl = wbPlayer.Document.CreateElement("script");
             //var element = (IHTMLScriptElement)scriptEl.DomElement;
             //element.src = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
             //head.AppendChild(scriptEl);
 
-            var scriptEl = wkPlayer.Document.CreateElement("script");
-            var element = scriptEl.NodeValue = global::DeskShark.Properties.Resources.scriptJs;
+            var nag = wkPlayer.Document.GetElementById("capital");
+            var app = wkPlayer.Document.GetElementById("application");
+            var wrp = wkPlayer.Document.GetElementById("page_wrapper");
+            nag.TextContent = " ";
+            app.SetAttribute("style", "width: 100% !important");
+            //wrp.SetAttribute("style", "width: 100% !important");
+            //scriptEl.NodeValue = global::DeskShark.Properties.Resources.scriptJs;
            //element.text = global::DeskShark.Properties.Resources.scriptJs;//"$(document).ready(function (){alert('jQ');});";//Application.StartupPath + @"\script.js";
-            head.AppendChild(scriptEl);
+            //wkPlayer.Document.LastChild.AppendChild(scriptEl);
+            lblTitle.Text = "DeskShark";
+            bmpSplash.Dispose();
+        }
+
+        private void pbIco_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show(wkPlayer.ToString());
+            wkPlayer.ToString();
+        }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+
         }
 
     }

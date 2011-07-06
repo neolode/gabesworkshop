@@ -138,11 +138,12 @@
   </data>
   <data name="scriptJs" xml:space="preserve">
     <value>
-      $(document).ready(function (){
+      alert('js');
+      //$(document).ready(function (){
         //$('#capital').remove();
         //$('#application').css('width','100%');
         //$('#page_wrapper').css('width','100%');
-      });
+      //});
     </value>
   </data>
   <data name="btn_rest" type="System.Resources.ResXFileRef, System.Windows.Forms">

@@ -38,8 +38,9 @@
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbIco = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.bmpSplash = new System.Windows.Forms.PictureBox();
             this.wkPlayer = new WebKit.WebKitBrowser();
+            this.bmpSplash = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.appLayout)).BeginInit();
             this.appLayout.Panel1.SuspendLayout();
             this.appLayout.Panel2.SuspendLayout();
             this.appLayout.SuspendLayout();
@@ -81,14 +82,14 @@
             this.appLayout.Panel1.Controls.Add(this.pbIco);
             this.appLayout.Panel1.Controls.Add(this.lblTitle);
             this.appLayout.Panel1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.appLayout.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.appLayout_Panel1_MouseDown);
             this.appLayout.Panel1.SizeChanged += new System.EventHandler(this.appLayout_Panel1_SizeChanged);
+            this.appLayout.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.appLayout_Panel1_MouseDown);
             this.appLayout.Panel1MinSize = 32;
             // 
             // appLayout.Panel2
             // 
-            this.appLayout.Panel2.Controls.Add(this.wkPlayer);
             this.appLayout.Panel2.Controls.Add(this.bmpSplash);
+            this.appLayout.Panel2.Controls.Add(this.wkPlayer);
             this.appLayout.Size = new System.Drawing.Size(784, 584);
             this.appLayout.SplitterDistance = 34;
             this.appLayout.SplitterWidth = 1;
@@ -132,9 +133,9 @@
             this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbClose.TabIndex = 2;
             this.pbClose.TabStop = false;
-            this.pbClose.MouseLeave += new System.EventHandler(this.pbClose_MouseLeave);
             this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
             this.pbClose.MouseEnter += new System.EventHandler(this.pbClose_MouseEnter);
+            this.pbClose.MouseLeave += new System.EventHandler(this.pbClose_MouseLeave);
             // 
             // pbIco
             // 
@@ -156,21 +157,10 @@
             this.lblTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(52, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(210, 18);
+            this.lblTitle.Size = new System.Drawing.Size(219, 18);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "DeskShark ~ initializing";
+            this.lblTitle.Text = "DeskShark  ~ Initializing";
             this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.appLayout_Panel1_MouseDown);
-            // 
-            // bmpSplash
-            // 
-            this.bmpSplash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bmpSplash.Image = global::DeskShark.Properties.Resources.gs;
-            this.bmpSplash.Location = new System.Drawing.Point(0, 0);
-            this.bmpSplash.Name = "bmpSplash";
-            this.bmpSplash.Size = new System.Drawing.Size(784, 549);
-            this.bmpSplash.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.bmpSplash.TabIndex = 4;
-            this.bmpSplash.TabStop = false;
             // 
             // wkPlayer
             // 
@@ -182,6 +172,17 @@
             this.wkPlayer.TabIndex = 6;
             this.wkPlayer.Url = new System.Uri("http://listen.grooveshark.com/", System.UriKind.Absolute);
             this.wkPlayer.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wkPlayer_DocumentCompleted);
+            // 
+            // bmpSplash
+            // 
+            this.bmpSplash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bmpSplash.Image = global::DeskShark.Properties.Resources.gs;
+            this.bmpSplash.Location = new System.Drawing.Point(0, 0);
+            this.bmpSplash.Name = "bmpSplash";
+            this.bmpSplash.Size = new System.Drawing.Size(784, 549);
+            this.bmpSplash.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.bmpSplash.TabIndex = 4;
+            this.bmpSplash.TabStop = false;
             // 
             // FrmMain
             // 
@@ -195,11 +196,13 @@
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
-            this.Opacity = 0.9;
+            this.Opacity = 0.9D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Load += new System.EventHandler(this.FrmMain_Load);
             this.appLayout.Panel1.ResumeLayout(false);
             this.appLayout.Panel1.PerformLayout();
             this.appLayout.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.appLayout)).EndInit();
             this.appLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMax)).EndInit();
